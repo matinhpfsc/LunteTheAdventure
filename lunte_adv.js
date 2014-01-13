@@ -6,8 +6,10 @@ function Player(image, imageIndex)
   this.image = image;
   this.imageIndex = imageIndex;
   this.speed = 0;
+  this.bulletproofCountdown = 0;
+  this.energy = 100;
   
-  this.move = function (timeStamp)
+  this.move = function (timeSpan)
   {
     var playerCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
     
@@ -15,21 +17,6 @@ function Player(image, imageIndex)
     
     var distanceToCellLocation = (cellLocation.x - this.location.x) * this.orientation.x
 			      + (cellLocation.y - this.location.y) * this.orientation.y;
-  
-    if (this.speed != 0)
-    {
-      if (this.animationStartTimeStamp == null)
-      {
-	this.animationStartTimeStamp = timeStamp;
-      }
-    }
-    else
-    {
-      if (this.animationStartTimeStamp != null)
-      {
-	this.animationStartTimeStamp = null;
-      }
-    }
 			      
     var currentPlayerSpeed = this.speed;
     if (currentPlayerSpeed > distanceToCellLocation)
@@ -54,7 +41,27 @@ function Player(image, imageIndex)
     }
 
     this.location = this.location.add(this.orientation.mul(currentPlayerSpeed));
-  }
+    
+    if (this.bulletproofCountdown > 0)
+    {
+      this.bulletproofCountdown -= timeSpan;
+      if (this.bulletproofCountdown < 0)
+      {
+	this.bulletproofCountdown = 0;
+      }
+    }
+  };
+  
+  this.isCollided = function(otherPlayer)
+  {
+    if (this == otherPlayer)
+    {
+      return false;
+    }
+    var playerCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
+    var otherPlayerCellPosition = new Vector2d(Math.floor((otherPlayer.location.x + 24.5) / 50), Math.floor((otherPlayer.location.y + 24.5) / 50));    
+    return playerCellPosition.equals(otherPlayerCellPosition);
+  };
 }
 
 function Vector2d(x, y)
@@ -91,24 +98,39 @@ function ViewPort(width, height)
   this.height = height;
 }
 
+lastTimeStamp = 0;
+
 function GameLoop(timeStamp)
 {
-  //TODO Spruenge begrenzen!
+  var timeSpan = timeStamp - lastTimeStamp;
+  timeSpan = Math.min(timeSpan, 1000); //To avoid greate jumps.
+  lastTimeStamp = timeStamp;
 
   for (var playerIndex = 0; playerIndex < allPlayers.length; playerIndex++)
   {
-    allPlayers[playerIndex].move(timeStamp);
+    var currentPlayer = allPlayers[playerIndex];
+    currentPlayer.move(timeSpan);
+    if (humanPlayer.bulletproofCountdown == 0 && currentPlayer.isCollided(humanPlayer))
+    {
+      humanPlayer.bulletproofCountdown = 3000;
+      humanPlayer.energy = Math.max(0, humanPlayer.energy - 35);
+    }
   }
   
   CorrectViewPort();
-  DrawCanvas(timeStamp);
+  DrawCanvas(timeSpan);
    
+  if (humanPlayer.energy <= 0)
+  {
+    alert("You are death");
+    return;
+  }
+  
    if (Math.floor((humanPlayer.location.x + 25) / 50) == endCellColumn && Math.floor((humanPlayer.location.y  + 25) / 50) == endCellRow)
    {
      alert("Exit achieved");
+     return;
    }
-   else
-   {
 /*     if (start == 0)
      {
        start = timeStamp;
@@ -123,19 +145,23 @@ function GameLoop(timeStamp)
      {
     window.requestAnimFrame(GameLoop);
      }
-   }
 }
 
 counter = 0;
 start = 0;
 
-function DrawCanvas(timeStamp)
+function DrawCanvas(timeSpan)
 {
   DrawMaze(viewPort);
   for (var playerIndex = 0; playerIndex < allPlayers.length; playerIndex++)
   {
-    DrawPlayer(allPlayers[playerIndex], viewPort, timeStamp);
+    DrawPlayer(allPlayers[playerIndex], viewPort, timeSpan);
   }
+  
+  doubleBufferCanvasContext.font = "italic 30pt Arial";
+  doubleBufferCanvasContext.textBaseline = "top";
+  doubleBufferCanvasContext.textAlign = "right";
+  doubleBufferCanvasContext.fillText(humanPlayer.energy.toString() + " %", windowWidth - 10, 10);
   
   canvasContext.drawImage(doubleBufferCanvas, 0, 0);
 }
@@ -245,12 +271,13 @@ function DrawMaze(viewPort)
   }  
 }
 
-function DrawPlayer(currentPlayer, viewPort, timeStamp)
+function DrawPlayer(currentPlayer, viewPort, timeSpan)
 {
   var animationIndex = 0;
-  if (currentPlayer.animationStartTimeStamp != null)
+  if (currentPlayer.speed != 0)
   {
-    animationIndex = Math.floor((timeStamp - currentPlayer.animationStartTimeStamp) / 100) % 8;
+    currentPlayer.animationStartTimeStamp += timeSpan;
+    animationIndex = Math.floor(currentPlayer.animationStartTimeStamp / 100) % 8;
   }
   var spriteIndex = 0;
   if (currentPlayer.orientation.x > 0)
@@ -268,7 +295,11 @@ function DrawPlayer(currentPlayer, viewPort, timeStamp)
   spriteIndex += currentPlayer.imageIndex * 4 * 8 + animationIndex;
   var spriteY = Math.floor(spriteIndex / 8);
   var spriteX = spriteIndex % 8;
-  doubleBufferCanvasContext.drawImage(currentPlayer.image, 50 * spriteX, 50 * spriteY, 50, 50, currentPlayer.location.x - viewPort.x, currentPlayer.location.y - viewPort.y, 50, 50);
+  
+  if ((Math.floor(currentPlayer.bulletproofCountdown / 100)) % 3 < 2)
+  {
+    doubleBufferCanvasContext.drawImage(currentPlayer.image, 50 * spriteX, 50 * spriteY, 50, 50, currentPlayer.location.x - viewPort.x, currentPlayer.location.y - viewPort.y, 50, 50);
+  }
 }
 
 function OnImageLoaded()
