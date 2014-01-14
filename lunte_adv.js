@@ -304,58 +304,79 @@ function DrawPlayer(currentPlayer, viewPort, timeSpan)
 
 function OnImageLoaded()
 {
-   imageCount--;
-   if (imageCount == 0)
-   {
-     var width = 16 * 2;
-     var height = 12 * 2;
-     
-     viewPort = new ViewPort(windowWidth, windowHeight);
-     
-     allPlayers = new Array();
-     
-     humanPlayer = new Player(activeImage, 1);
-     humanPlayer.location.x = 50;
-     humanPlayer.location.y = 50;
-     allPlayers.push(humanPlayer);
-     
-     enemyPlayers = new Array();
-     
-     enemyPlayer = new Player(passiveImage, 1);
-     enemyPlayer.location.x = 50 * (width - 2);
-     enemyPlayer.location.y = 50 * (height - 2);
-     enemyPlayer.speed = 2;
-     allPlayers.push(enemyPlayer);
-     enemyPlayers.push(enemyPlayer);
+  imageCount--;
+  if (imageCount == 0)
+  {
+    var size = 1;
+    var width = 16 * size;
+    var height = 12 * size;
 
-     enemyPlayer = new Player(passiveImage, 0);
-     enemyPlayer.location.x = 50 * (width - 2);
-     enemyPlayer.location.y = 50 * 1;
-     enemyPlayer.speed = 2;
-     allPlayers.push(enemyPlayer);
-     enemyPlayers.push(enemyPlayer);
-     
-     enemyPlayer = new Player(activeImage, 4);
-     enemyPlayer.location.x = 50 * 1;
-     enemyPlayer.location.y = 50 * (height - 2);
-     enemyPlayer.speed = 2;
-     allPlayers.push(enemyPlayer);
-     enemyPlayers.push(enemyPlayer);
-     
-     gameMaze = new Maze(width, height);
-     
-     window.addEventListener("keydown", OnKeyDown, false);
-     window.addEventListener("keyup", OnKeyUp, false);
+    viewPort = new ViewPort(windowWidth, windowHeight);
 
-      doubleBufferCanvas = document.createElement("canvas");
-      doubleBufferCanvas.width = windowWidth;
-      doubleBufferCanvas.height = windowHeight;
-      doubleBufferCanvasContext = doubleBufferCanvas.getContext("2d");
+    allPlayers = new Array();
 
-     setInterval(ComputerControledMove, 250);
-      
-     GameLoop(null);
-   }
+    humanPlayer = new Player(activeImage, 1);
+    humanPlayer.location.x = 50;
+    humanPlayer.location.y = 50;
+    allPlayers.push(humanPlayer);
+
+    gameMaze = new Maze(width, height);
+
+    enemyPlayers = new Array();
+
+    for (var fieldPartX = 0; fieldPartX < size; fieldPartX++)
+    {
+      for (var fieldPartY = 0; fieldPartY < size; fieldPartY++)
+      {
+	var enemyPlayer = new Player(passiveImage, Math.floor(Math.random() * 2));
+	var v = GetNearestFreeFieldVector(gameMaze, new Vector2d(8 * (2 * fieldPartX + 1), 6 * ( 2 * fieldPartY + 1)));
+
+	enemyPlayer.location.x = 50 * v.x;
+	enemyPlayer.location.y = 50 * v.y;
+	enemyPlayer.speed = 2;
+	allPlayers.push(enemyPlayer);
+	enemyPlayers.push(enemyPlayer);	
+      }      
+    }
+
+    //TODO Was passiert hier bei mehrmaligen Aufruf?
+    window.addEventListener("keydown", OnKeyDown, false);
+    window.addEventListener("keyup", OnKeyUp, false);
+
+    doubleBufferCanvas = document.createElement("canvas");
+    doubleBufferCanvas.width = windowWidth;
+    doubleBufferCanvas.height = windowHeight;
+    doubleBufferCanvasContext = doubleBufferCanvas.getContext("2d");
+
+    //TODO Was passiert hier bei mehrmaligen Aufruf?
+    setInterval(ComputerControledMove, 250);
+
+    GameLoop(null);
+  }
+}
+
+function GetNearestFreeFieldVector(maze, startVector)
+{
+  var xArray = new Array( 0, -1, -1, -1,  0, +1, +1, +1);
+  var yArray = new Array(-1, -1,  0, +1, +1, +1,  0, -1);
+  
+  for (var index = 0; index < xArray.length; index++)
+  {
+    var fieldVector = startVector.add(new Vector2d(xArray[index], yArray[index]));
+    if (maze.getFieldValue(fieldVector.x, fieldVector.y) == 0)
+    {
+      return fieldVector;
+    }
+  }
+  return null;
+}
+
+function StartNewLevel()
+{
+}
+
+function EndLevel()
+{
 }
 
 function ComputerControledMove()
