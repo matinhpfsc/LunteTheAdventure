@@ -418,38 +418,43 @@ function ComputerControledMove()
   }
 }
 
-function OnKeyDown(e)
+function OnKeyDown(event)
 {
-  var currentPlayer = humanPlayer;
-  if (e.keyCode == 40)
-  {
-    currentPlayer.orientation = DOWN;
-    currentPlayer.speed = 4;
-    return;
-  }
-  if (e.keyCode == 38)
-  {
-    currentPlayer.orientation = UP;
-    currentPlayer.speed = 4;
-    return;
-  }
-  if (e.keyCode == 39)
-  {
-    currentPlayer.orientation = RIGHT;
-    currentPlayer.speed = 4;
-    return;
-  }
-  if (e.keyCode == 37)
-  {
-    currentPlayer.orientation = LEFT;
-    currentPlayer.speed = 4;
-    return;
-  }
+    switch(event.keyCode)
+    {
+        case 40: event.preventDefault(); playerMove(DOWN); break;
+        case 38: event.preventDefault(); playerMove(UP); break;
+        case 39: event.preventDefault(); playerMove(RIGHT); break;
+        case 37: event.preventDefault(); playerMove(LEFT); break;
+    }
 }
 
-function OnKeyUp(e)
+function OnKeyUp()
 {
-  humanPlayer.speed = 0;
+    playerStop();
+}
+
+function playerMove(orientation)
+{
+    // MH: die Gesten sind in einem gestures-Objekt gekapselt. Von dort aus kann ich nicht einfach so die
+    // Funktionen UP, DOWN... aufrufen. Daher übergebe ich das als String und konvertiere es hier,
+    // wenn es denn ein String ist.
+    // Das kann weg, wenn die lunte_adv.js auch Objekte sind.
+
+    switch (orientation)
+    {
+        case "UP": orientation = UP; break;
+        case "DOWN": orientation = DOWN; break;
+        case "LEFT": orientation = LEFT; break;
+        case "RIGHT": orientation = RIGHT; break;
+    }
+    humanPlayer.orientation = orientation;
+    humanPlayer.speed = 4;
+}
+
+function playerStop()
+{
+    humanPlayer.speed = 0;
 }
 
 function Start()
@@ -473,7 +478,7 @@ function Start()
   mazeSpriteIndexes[14] = 34;
   mazeSpriteIndexes[15] = 27;
   
-   var canvas = document.getElementById("myCanvas");
+   var canvas = document.getElementById("lunte-canvas");
 
    windowWidth = canvas.width;
    windowHeight = canvas.height;
@@ -498,4 +503,9 @@ function GetRequestAnimFrameFunction()
       };
 }
 
-Start();
+$(document).ready(function() {
+    Start();
+    //addHandler();
+    gestures.init();
+
+});
