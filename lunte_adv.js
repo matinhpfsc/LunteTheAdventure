@@ -307,7 +307,7 @@ function OnImageLoaded()
   imageCount--;
   if (imageCount == 0)
   {
-    var size = 1;
+    var size = 2;
     var width = 16 * size;
     var height = 12 * size;
 
