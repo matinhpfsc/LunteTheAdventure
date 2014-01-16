@@ -152,17 +152,54 @@ start = 0;
 
 function DrawCanvas(timeSpan)
 {
-  DrawMaze(viewPort);
+  DrawMaze();
+  
   for (var playerIndex = 0; playerIndex < allPlayers.length; playerIndex++)
   {
     DrawPlayer(allPlayers[playerIndex], viewPort, timeSpan);
   }
+
+  DrawInstrumentLayer();
+  DrawToWindow();
+}
+
+function DrawMaze()
+{
+  doubleBufferCanvasContext.drawImage(gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, windowWidth, windowHeight);
+}
+
+instrumentLayerImage = null;
+lastPlayerEnergy = null;
+
+function DrawInstrumentLayer()
+{
+
+  if (instrumentLayerImage == null)
+  {
+    instrumentLayerImage = document.createElement("canvas");
+    instrumentLayerImage.width = windowWidth;
+    instrumentLayerImage.height = windowHeight;
+    instrumentLayerImageContext = instrumentLayerImage.getContext("2d");
+  }
+
+  if (lastPlayerEnergy != humanPlayer.energy)
+  {
+    if (lastPlayerEnergy == null)
+    {
+      instrumentLayerImageContext.fillStyle="#FF0000";
+      instrumentLayerImageContext.strokeStyle="#000000";
+    }
+    lastPlayerEnergy = humanPlayer.energy;
+    instrumentLayerImageContext.clearRect(windowWidth - 150, 0, 104, 50);
+    instrumentLayerImageContext.fillRect(windowWidth - 148, 22, lastPlayerEnergy, 10);
+    instrumentLayerImageContext.strokeRect(windowWidth - 150, 20, 104, 14);
+  }
   
-  doubleBufferCanvasContext.font = "italic 30pt Arial";
-  doubleBufferCanvasContext.textBaseline = "top";
-  doubleBufferCanvasContext.textAlign = "right";
-  doubleBufferCanvasContext.fillText(humanPlayer.energy.toString() + " %", windowWidth - 10, 10);
-  
+  doubleBufferCanvasContext.drawImage(instrumentLayerImage, 0, 0);
+}
+
+function DrawToWindow()
+{
   canvasContext.drawImage(doubleBufferCanvas, 0, 0);
 }
 
@@ -244,31 +281,26 @@ function CorrectViewPort()
   }  
 }
 
-function DrawMaze(viewPort)
+function CreateMazeImage()
 {
-  var width = gameMaze.width;
-  var height = gameMaze.height;
-    
-  var startColumn = Math.floor(viewPort.x / 50);
-  var startRow = Math.floor(viewPort.y / 50);
+  var mazeCanvas = document.createElement("canvas");
+  mazeCanvas.width = gameMaze.width * 50;
+  mazeCanvas.height = gameMaze.height * 50;
+  var mazeCanvasContext = mazeCanvas.getContext("2d");
   
-  var endColumn = Math.ceil((viewPort.x + viewPort.width) / 50);
-  var endRow = Math.ceil((viewPort.y + viewPort.height) / 50);
-    
-  width = Math.min(width, endColumn);
-  height = Math.min(height, endRow);
-  
-  for (var cellColumn = startColumn; cellColumn < width; cellColumn++)
+  for (var cellColumn = 0; cellColumn < gameMaze.width; cellColumn++)
   {
-    for (var cellRow = startRow; cellRow < height; cellRow++)
+    for (var cellRow = 0; cellRow < gameMaze.height; cellRow++)
     {
       var spriteIndex = GetSpriteIndex(cellColumn, cellRow);
       
       var spriteY = Math.floor(spriteIndex / 5);
       var spriteX = spriteIndex % 5;
-      doubleBufferCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50 - viewPort.x, cellRow * 50 - viewPort.y, 50, 50);
+      mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
     }
-  }  
+  }
+  
+  return mazeCanvas;
 }
 
 function DrawPlayer(currentPlayer, viewPort, timeSpan)
@@ -322,6 +354,8 @@ function OnImageLoaded()
 
     gameMaze = new Maze(width, height);
 
+    gameMazeImage = CreateMazeImage();
+    
     enemyPlayers = new Array();
 
     for (var fieldPartX = 0; fieldPartX < size; fieldPartX++)
@@ -357,8 +391,8 @@ function OnImageLoaded()
 
 function GetNearestFreeFieldVector(maze, startVector)
 {
-  var xArray = new Array( 0, -1, -1, -1,  0, +1, +1, +1);
-  var yArray = new Array(-1, -1,  0, +1, +1, +1,  0, -1);
+  var xArray = new Array(0,  0, -1, -1, -1,  0, +1, +1, +1);
+  var yArray = new Array(0, -1, -1,  0, +1, +1, +1,  0, -1);
   
   for (var index = 0; index < xArray.length; index++)
   {
