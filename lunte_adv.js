@@ -340,8 +340,8 @@ function OnImageLoaded()
     }
 
     //TODO Was passiert hier bei mehrmaligen Aufruf?
-    window.addEventListener("keydown", OnKeyDown, false);
-    window.addEventListener("keyup", OnKeyUp, false);
+    window.addEventListener("keydown", keyboard.OnKeyDown, false);
+    window.addEventListener("keyup", keyboard.OnKeyUp, false);
 
     doubleBufferCanvas = document.createElement("canvas");
     doubleBufferCanvas.width = windowWidth;
@@ -369,14 +369,6 @@ function GetNearestFreeFieldVector(maze, startVector)
     }
   }
   return null;
-}
-
-function StartNewLevel()
-{
-}
-
-function EndLevel()
-{
 }
 
 function ComputerControledMove()
@@ -418,21 +410,6 @@ function ComputerControledMove()
   }
 }
 
-function OnKeyDown(event)
-{
-    switch(event.keyCode)
-    {
-        case 40: event.preventDefault(); playerMove(DOWN); break;
-        case 38: event.preventDefault(); playerMove(UP); break;
-        case 39: event.preventDefault(); playerMove(RIGHT); break;
-        case 37: event.preventDefault(); playerMove(LEFT); break;
-    }
-}
-
-function OnKeyUp()
-{
-    playerStop();
-}
 
 function playerMove(orientation)
 {
@@ -507,5 +484,6 @@ $(document).ready(function() {
     Start();
     //addHandler();
     gestures.init();
+    game.init();
 
 });

@@ -1,10 +1,12 @@
 var gestures = 
 {
+    playerId: "",
     isTouchStart: false,
     touchSchwellwert: 1,
     lunteObj: "",
     touchStartX:false,
     touchStartY:false,
+
 
 
     init: function ()
@@ -16,6 +18,11 @@ var gestures =
     setObj: function ()
     {
         this.lunteObj = $("#lunte-canvas");
+    },
+
+    setPlayerId: function (id)
+    {
+      this.playerId = id;
     },
 
     addHandler: function ()
