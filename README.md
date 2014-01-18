@@ -56,6 +56,21 @@ To build an official release, use:
 The release will be stored in the dist/ folder.
 
 
+Running static code analysis
+============================
+
+There are two common tools to prevent common coding errors in JavaScript.
+
+1) Add the following line at the very top of each JavaScript file so that the
+browser's compiler stops on syntax errors like undefined variables:
+
+    'use strict';
+
+2) Run static code analysis on your code using the following grunt task:
+
+    grunt newer:jshint
+
+
 Formatting source code
 ======================
 
