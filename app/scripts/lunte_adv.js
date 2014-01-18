@@ -1,69 +1,3 @@
-function Figure(image, imageIndex)
-{
-  this.location = new Vector2d(0,0);
-  this.orientation = new Vector2d(0, 1);
-  this.animationStartTimeStamp = null;
-  this.image = image;
-  this.imageIndex = imageIndex;
-  this.speed = 0;
-  this.bulletproofCountdown = 0;
-  this.energy = 100;
-  
-  this.move = function (timeSpan)
-  {
-    var figureCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
-    
-    var cellLocation = figureCellPosition.mul(50);
-    
-    var distanceToCellLocation = (cellLocation.x - this.location.x) * this.orientation.x
-			      + (cellLocation.y - this.location.y) * this.orientation.y;
-			      
-    var currentFigureSpeed = this.speed;
-    if (currentFigureSpeed > distanceToCellLocation)
-    {
-      //Pruefe, ob naechtse Zelle begehbar ist.
-      if (gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1)
-      {
-	currentFigureSpeed = distanceToCellLocation;
-      }
-      else
-      {
-	  var distanceToOtherCellLocation = ((cellLocation.x - this.location.x) * Math.abs(this.orientation.y)
-				+ (cellLocation.y - this.location.y) * Math.abs(this.orientation.x));
-
-	  var currentFigureOtherSpeed = Math.min(currentFigureSpeed, Math.abs(distanceToOtherCellLocation));
-
-	  var sgn = distanceToOtherCellLocation > 0 ? 1 : -1;
-	  this.location.x += sgn * Math.abs(this.orientation.y) * currentFigureOtherSpeed;
-	  this.location.y += sgn * Math.abs(this.orientation.x) * currentFigureOtherSpeed;
-	  currentFigureSpeed -= currentFigureOtherSpeed;
-      }
-    }
-
-    this.location = this.location.add(this.orientation.mul(currentFigureSpeed));
-    
-    if (this.bulletproofCountdown > 0)
-    {
-      this.bulletproofCountdown -= timeSpan;
-      if (this.bulletproofCountdown < 0)
-      {
-	this.bulletproofCountdown = 0;
-      }
-    }
-  };
-  
-  this.isCollided = function(otherFigure)
-  {
-    if (this == otherFigure)
-    {
-      return false;
-    }
-    var figureCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
-    var otherFigureCellPosition = new Vector2d(Math.floor((otherFigure.location.x + 24.5) / 50), Math.floor((otherFigure.location.y + 24.5) / 50));    
-    return figureCellPosition.equals(otherFigureCellPosition);
-  };
-}
-
 function Vector2d(x, y)
 {
   this.x = x;
@@ -367,7 +301,8 @@ function OnImageLoaded()
 
 	enemyFigure.location.x = 50 * v.x;
 	enemyFigure.location.y = 50 * v.y;
-	enemyFigure.speed = 2;
+	enemyFigure.maximumSpeed = 2;
+	enemyFigure.startWalking(DOWN);
 	allFigures.push(enemyFigure);
 	enemyFigures.push(enemyFigure);	
       }      
@@ -442,11 +377,11 @@ function ComputerControledMove()
 
       if (possibleWays. length > 0)
       {
-	currentFigure.orientation = possibleWays[Math.floor(Math.random() * possibleWays.length)];
+	currentFigure.startWalking(possibleWays[Math.floor(Math.random() * possibleWays.length)]);
       }
       else
       {
-	currentFigure.orientation = currentFigure.orientation.mul(-1);
+	currentFigure.startWalking(currentFigure.orientation.mul(-1));
       }
   }
   }
@@ -465,7 +400,7 @@ function OnKeyDown(event)
 
 function OnKeyUp()
 {
-    figureStop();
+  humanFigure.stopWalking();
 }
 
 function figureMove(orientation)
@@ -482,13 +417,8 @@ function figureMove(orientation)
         case "LEFT": orientation = LEFT; break;
         case "RIGHT": orientation = RIGHT; break;
     }
-    humanFigure.orientation = orientation;
-    humanFigure.speed = 4;
-}
-
-function figureStop()
-{
-    humanFigure.speed = 0;
+    
+    humanFigure.startWalking(orientation);
 }
 
 function Start()
