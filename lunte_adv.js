@@ -22,7 +22,7 @@ function Player(image, imageIndex)
     if (currentPlayerSpeed > distanceToCellLocation)
     {
       //Pruefe, ob naechtse Zelle begehbar ist.
-      if (gameMaze.getFieldValue(playerCellPosition.x + this.orientation.x, playerCellPosition.y + this.orientation.y) == 1)
+      if (maze.getFieldValue(playerCellPosition.x + this.orientation.x, playerCellPosition.y + this.orientation.y) == 1)
       {
 	currentPlayerSpeed = distanceToCellLocation;
       }
@@ -185,16 +185,16 @@ function StartImageLoading()
 
 function GetSpriteIndex(cellColumn, cellRow)
 {
-  if (gameMaze.getFieldValue(cellColumn, cellRow) == 0)
+  if (maze.getFieldValue(cellColumn, cellRow) == 0)
   {
     return 8;
   }
   else
   {
-    var left = gameMaze.getFieldValue(cellColumn - 1, cellRow);
-    var right = gameMaze.getFieldValue(cellColumn + 1, cellRow);
-    var top = gameMaze.getFieldValue(cellColumn, cellRow - 1);
-    var bottom = gameMaze.getFieldValue(cellColumn, cellRow + 1);
+    var left = maze.getFieldValue(cellColumn - 1, cellRow);
+    var right = maze.getFieldValue(cellColumn + 1, cellRow);
+    var top = maze.getFieldValue(cellColumn, cellRow - 1);
+    var bottom = maze.getFieldValue(cellColumn, cellRow + 1);
 
     var number = left * 8 + bottom * 4 + right * 2 + top * 1;
         
@@ -204,8 +204,8 @@ function GetSpriteIndex(cellColumn, cellRow)
 
 function CorrectViewPort()
 {
-  var width = gameMaze.width;
-  var height = gameMaze.height;
+  var width = maze.width;
+  var height = maze.height;
   
   var currentPlayer = humanPlayer;
   
@@ -246,8 +246,8 @@ function CorrectViewPort()
 
 function DrawMaze(viewPort)
 {
-  var width = gameMaze.width;
-  var height = gameMaze.height;
+  var width = maze.width;
+  var height = maze.height;
     
   var startColumn = Math.floor(viewPort.x / 50);
   var startRow = Math.floor(viewPort.y / 50);
@@ -320,7 +320,7 @@ function OnImageLoaded()
     humanPlayer.location.y = 50;
     allPlayers.push(humanPlayer);
 
-    gameMaze = new Maze(width, height);
+    maze.CreateLabyrinth();
 
     enemyPlayers = new Array();
 
@@ -329,7 +329,7 @@ function OnImageLoaded()
       for (var fieldPartY = 0; fieldPartY < size; fieldPartY++)
       {
 	var enemyPlayer = new Player(passiveImage, Math.floor(Math.random() * 2));
-	var v = GetNearestFreeFieldVector(gameMaze, new Vector2d(8 * (2 * fieldPartX + 1), 6 * ( 2 * fieldPartY + 1)));
+	var v = GetNearestFreeFieldVector(new Vector2d(8 * (2 * fieldPartX + 1), 6 * ( 2 * fieldPartY + 1)));
 
 	enemyPlayer.location.x = 50 * v.x;
 	enemyPlayer.location.y = 50 * v.y;
@@ -355,7 +355,7 @@ function OnImageLoaded()
   }
 }
 
-function GetNearestFreeFieldVector(maze, startVector)
+function GetNearestFreeFieldVector(startVector)
 {
   var xArray = new Array( 0, -1, -1, -1,  0, +1, +1, +1);
   var yArray = new Array(-1, -1,  0, +1, +1, +1,  0, -1);
@@ -378,22 +378,22 @@ function ComputerControledMove()
   var currentPlayer = enemyPlayers[playerIndex];
   var playerCellPosition = new Vector2d(Math.floor((currentPlayer.location.x + 24.5) / 50), Math.floor((currentPlayer.location.y + 25.5) / 50));
 
-  if (gameMaze.getFieldValue(playerCellPosition.x + currentPlayer.orientation.x, playerCellPosition.y + currentPlayer.orientation.y) == 1)
+  if (maze.getFieldValue(playerCellPosition.x + currentPlayer.orientation.x, playerCellPosition.y + currentPlayer.orientation.y) == 1)
   {
       var possibleWays = new Array();
-      if (gameMaze.getFieldValue(playerCellPosition.x + 0, playerCellPosition.y + 1) == 0 && !currentPlayer.orientation.equals(new Vector2d(0, -1)))
+      if (maze.getFieldValue(playerCellPosition.x + 0, playerCellPosition.y + 1) == 0 && !currentPlayer.orientation.equals(new Vector2d(0, -1)))
       {
 	possibleWays.push(new Vector2d(0, 1));
       }
-      if (gameMaze.getFieldValue(playerCellPosition.x + 1, playerCellPosition.y + 0) == 0 && !currentPlayer.orientation.equals(new Vector2d(-1, 0)))
+      if (maze.getFieldValue(playerCellPosition.x + 1, playerCellPosition.y + 0) == 0 && !currentPlayer.orientation.equals(new Vector2d(-1, 0)))
       {
 	possibleWays.push(new Vector2d(1, 0));
       }
-      if (gameMaze.getFieldValue(playerCellPosition.x + 0, playerCellPosition.y - 1) == 0 && !currentPlayer.orientation.equals(new Vector2d(0, 1)))
+      if (maze.getFieldValue(playerCellPosition.x + 0, playerCellPosition.y - 1) == 0 && !currentPlayer.orientation.equals(new Vector2d(0, 1)))
       {
 	possibleWays.push(new Vector2d(0, -1));
       }
-      if (gameMaze.getFieldValue(playerCellPosition.x - 1, playerCellPosition.y + 0) == 0 && !currentPlayer.orientation.equals(new Vector2d(1, 0)))
+      if (maze.getFieldValue(playerCellPosition.x - 1, playerCellPosition.y + 0) == 0 && !currentPlayer.orientation.equals(new Vector2d(1, 0)))
       {
 	possibleWays.push(new Vector2d(-1, 0));
       }
@@ -484,6 +484,8 @@ $(document).ready(function() {
     Start();
     //addHandler();
     gestures.init();
+    settings.init();
     game.init();
+
 
 });

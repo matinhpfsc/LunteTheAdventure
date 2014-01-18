@@ -46,14 +46,14 @@ var gestures =
 
         gestures.touchStartX = (event.pageX || event.originalEvent.touches[0].pageX);
         gestures.touchStartY = (event.pageY || event.originalEvent.touches[0].pageY);
-        tools.log(event);
+        //tools.log(event);
         event.preventDefault();
 
     },
 
     touchMove: function (event)
     {
-        tools.log("touchMove"+event);
+        //tools.log("touchMove"+event);
 
         if (gestures.isTouchStart)
         {
@@ -104,7 +104,7 @@ var gestures =
 
     touchEnd: function (event)
     {
-        tools.log("touchEnd");
+      //  tools.log("touchEnd");
         gestures.isTouchStart = false;
         playerStop();
 
