@@ -1,37 +1,32 @@
-var gestures = 
-{
+var gestures = {
     isTouchStart: false,
     touchSchwellwert: 1,
     lunteObj: "",
-    touchStartX:false,
-    touchStartY:false,
+    touchStartX: false,
+    touchStartY: false,
 
 
-    init: function ()
-    {
-      gestures.setObj();
-      gestures.addHandler();
+    init: function() {
+        gestures.setObj();
+        gestures.addHandler();
     },
 
-    setObj: function ()
-    {
+    setObj: function() {
         this.lunteObj = $("#lunte-canvas");
     },
 
-    addHandler: function ()
-    {
+    addHandler: function() {
         // Touchgesten
         // Bewegungen durch Touchgesten können nur innerhalb des Canvas initiiert werden
-        $(gestures.lunteObj).on('touchstart mousedown', gestures.touchStart );
+        $(gestures.lunteObj).on('touchstart mousedown', gestures.touchStart);
         // Aber um die Gesten auszuführen und zu beenden steht die gesamte Seite zur Verfügung
         $("html")
-            .on('touchmove mousemove', gestures.touchMove )
-            .on('touchend mouseup', gestures.touchEnd );
+            .on('touchmove mousemove', gestures.touchMove)
+            .on('touchend mouseup', gestures.touchEnd);
 
     },
 
-    touchStart: function (event)
-    {
+    touchStart: function(event) {
         gestures.isTouchStart = true;
 
         // Bei Es wird der Wert von pageX verwendet. Bei Tablets gibt es den aber nicht.
@@ -44,47 +39,38 @@ var gestures =
 
     },
 
-    touchMove: function (event)
-    {
-        tools.log("touchMove"+event);
+    touchMove: function(event) {
+        tools.log("touchMove" + event);
 
-        if (gestures.isTouchStart)
-        {
+        if (gestures.isTouchStart) {
             event.preventDefault();
             var deltaX = (event.pageX || event.originalEvent.touches[0].pageX) - gestures.touchStartX;
-            var deltaY = (event.pageY || event.originalEvent.touches[0].pageY)- gestures.touchStartY;
+            var deltaY = (event.pageY || event.originalEvent.touches[0].pageY) - gestures.touchStartY;
 
 
-            if (Math.abs(deltaX) > Math.abs(deltaY))
-            {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 // horizontale Bewegung
-                if (deltaX > gestures.touchSchwellwert)
-                {
-                    tools.log ("Gesture nach rechts "+deltaX+":"+deltaY);
+                if (deltaX > gestures.touchSchwellwert) {
+                    tools.log("Gesture nach rechts " + deltaX + ":" + deltaY);
                     playerMove("RIGHT");
-                   // gestures.isTouchStart = false;
+                    // gestures.isTouchStart = false;
                 }
 
-                if (deltaX < -gestures.touchSchwellwert)
-                {
-                    tools.log ("Gesture nach links "+deltaX+":"+deltaY);
+                if (deltaX < -gestures.touchSchwellwert) {
+                    tools.log("Gesture nach links " + deltaX + ":" + deltaY);
                     playerMove("LEFT");
-                   // gestures.isTouchStart = false;
+                    // gestures.isTouchStart = false;
                 }
-            }
-            else
-            {
+            } else {
                 // vertikale Bewegung
-                if (deltaY > gestures.touchSchwellwert)
-                {
-                    tools.log ("Gesture nach unten "+deltaX+":"+deltaY);
+                if (deltaY > gestures.touchSchwellwert) {
+                    tools.log("Gesture nach unten " + deltaX + ":" + deltaY);
                     //gestures.isTouchStart = false;
                     playerMove("DOWN");
                 }
 
-                if (deltaY < -gestures.touchSchwellwert)
-                {
-                    tools.log ("Gesture nach oben "+deltaX+":"+deltaY);
+                if (deltaY < -gestures.touchSchwellwert) {
+                    tools.log("Gesture nach oben " + deltaX + ":" + deltaY);
                     playerMove("UP");
                     //gestures.isTouchStart = false;
                 }
@@ -95,8 +81,7 @@ var gestures =
 
     },
 
-    touchEnd: function (event)
-    {
+    touchEnd: function(event) {
         tools.log("touchEnd");
         gestures.isTouchStart = false;
         playerStop();

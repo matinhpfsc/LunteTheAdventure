@@ -54,3 +54,11 @@ To build an official release, use:
     grunt
 
 The release will be stored in the dist/ folder.
+
+
+Formatting source code
+======================
+
+To format all JS files according to common JS style guide, use:
+
+	grunt format
