@@ -7,7 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
@@ -42,8 +42,8 @@ module.exports = function (grunt) {
                 files: ['Gruntfile.js']
             },
             //compass: {
-                //files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                //tasks: ['compass:server', 'autoprefixer']
+            //files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+            //tasks: ['compass:server', 'autoprefixer']
             //},
             styles: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -139,7 +139,7 @@ module.exports = function (grunt) {
 
 
         // Compiles Sass to CSS and generates necessary files if requested
-/*
+        /*
         compass: {
             options: {
                 sassDir: '<%= yeoman.app %>/styles',
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
                     src: [
                         '<%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{gif,jpeg,jpg,png,webp}',
+                        // '<%= yeoman.dist %>/images/{,*/}*.{gif,jpeg,jpg,png,webp}',
                         '<%= yeoman.dist %>/styles/fonts/{,*/}*.*'
                     ]
                 }
@@ -305,7 +305,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/{,*/}*.webp',
                         '{,*/}*.html',
-                        'styles/fonts/{,*/}*.*'//,
+                        'styles/fonts/{,*/}*.*' //,
                         //'bower_components/sass-bootstrap/fonts/*.*'
                     ]
                 }]
@@ -323,14 +323,14 @@ module.exports = function (grunt) {
         // Generates a custom Modernizr build that includes only the tests you
         // reference in your app
         //modernizr: {
-            //devFile: '<%= yeoman.app %>/bower_components/modernizr/modernizr.js',
-            //outputFile: '<%= yeoman.dist %>/bower_components/modernizr/modernizr.js',
-            //files: [
-                //'<%= yeoman.dist %>/scripts/{,*/}*.js',
-                //'<%= yeoman.dist %>/styles/{,*/}*.css',
-                //'!<%= yeoman.dist %>/scripts/vendor/*'
-            //],
-            //uglify: true
+        //devFile: '<%= yeoman.app %>/bower_components/modernizr/modernizr.js',
+        //outputFile: '<%= yeoman.dist %>/bower_components/modernizr/modernizr.js',
+        //files: [
+        //'<%= yeoman.dist %>/scripts/{,*/}*.js',
+        //'<%= yeoman.dist %>/styles/{,*/}*.css',
+        //'!<%= yeoman.dist %>/scripts/vendor/*'
+        //],
+        //uglify: true
         //},
 
         // Run some tasks in parallel to speed up build process
@@ -343,16 +343,22 @@ module.exports = function (grunt) {
                 'copy:styles'
             ],
             dist: [
-               // 'compass',
+                // 'compass',
                 'copy:styles',
                 'imagemin',
                 'svgmin'
             ]
+        },
+
+        jsbeautifier: {
+            format: {
+                src: ['Gruntfile.js', 'package.json', '<%= yeoman.app %>/scripts/{,*/}*.js']
+            }
         }
     });
 
 
-    grunt.registerTask('serve', function (target) {
+    grunt.registerTask('serve', function(target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
@@ -396,8 +402,12 @@ module.exports = function (grunt) {
         'htmlmin'
     ]);
 
+    grunt.registerTask('format', [
+        'jsbeautifier'
+    ]);
+
     grunt.registerTask('default', [
-        //'newer:jshint',
+        // 'newer:jshint',
         'test',
         'build'
     ]);
