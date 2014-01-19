@@ -9,6 +9,11 @@ function Figure(image, imageIndex)
   this.speed = 0;
   this.bulletproofCountdown = 0;
   this.energy = 100;
+
+  this.UP = new Vector2d(0, -1);
+  this.DOWN = new Vector2d(0, +1);
+  this.LEFT = new Vector2d(-1, 0);
+  this.RIGHT = new Vector2d(+1, 0);
   
   this.move = function (timeSpan)
   {
@@ -68,6 +73,26 @@ function Figure(image, imageIndex)
   {
     this.orientation = orientation;
     this.speed = this.maximumSpeed;
+  };
+
+  this.startWalkingUp = function()
+  {
+    this.startWalking(this.UP);
+  };
+
+  this.startWalkingDown = function()
+  {
+    this.startWalking(this.DOWN);
+  };
+  
+  this.startWalkingLeft = function()
+  {
+    this.startWalking(this.LEFT);
+  };
+
+  this.startWalkingRight = function()
+  {
+    this.startWalking(this.RIGHT);
   };
   
   this.stopWalking = function()

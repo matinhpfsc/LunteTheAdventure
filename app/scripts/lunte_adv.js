@@ -15,11 +15,6 @@ function Vector2d(x, y) {
     }
 }
 
-UP = new Vector2d(0, -1);
-DOWN = new Vector2d(0, +1);
-LEFT = new Vector2d(-1, 0);
-RIGHT = new Vector2d(+1, 0);
-
 function ViewPort(width, height) {
     this.x = 0;
     this.y = 0;
