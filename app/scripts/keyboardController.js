@@ -10,17 +10,12 @@ function KeyboardController(figure)
     
     this.onKeyDown = function(event)
     {
-      var orientation = null;
       switch(event.keyCode)
       {
-	  case 40: event.preventDefault(); orientation = DOWN; break;
-	  case 38: event.preventDefault(); orientation = UP; break;
-	  case 39: event.preventDefault(); orientation = RIGHT; break;
-	  case 37: event.preventDefault(); orientation = LEFT; break;
-      }
-      if (orientation !== null)
-      {
-	_this.controlledFigure.startWalking(orientation);
+	  case 40: event.preventDefault(); _this.controlledFigure.startWalkingDown(); break;
+	  case 38: event.preventDefault(); _this.controlledFigure.startWalkingUp(); break;
+	  case 39: event.preventDefault(); _this.controlledFigure.startWalkingRight(); break;
+	  case 37: event.preventDefault(); _this.controlledFigure.startWalkingLeft(); break;
       }
     };
     
