@@ -308,9 +308,12 @@ function OnImageLoaded()
       }      
     }
 
+    var humanController = new KeyboardController(humanFigure);
+    humanController.start();
+    
     //TODO Was passiert hier bei mehrmaligen Aufruf?
-    window.addEventListener("keydown", OnKeyDown, false);
-    window.addEventListener("keyup", OnKeyUp, false);
+    //window.addEventListener("keydown", OnKeyDown, false);
+    //window.addEventListener("keyup", OnKeyUp, false);
 
     doubleBufferCanvas = document.createElement("canvas");
     doubleBufferCanvas.width = windowWidth;
