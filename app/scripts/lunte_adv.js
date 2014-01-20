@@ -326,24 +326,22 @@ function figureMove(orientation) {
 
     switch (orientation) {
         case "UP":
-            orientation = UP;
+            humanFigure.startWalkingUp();
             break;
         case "DOWN":
-            orientation = DOWN;
+            humanFigure.startWalkingDown();
             break;
         case "LEFT":
-            orientation = LEFT;
+            humanFigure.startWalkingLeft();
             break;
         case "RIGHT":
-            orientation = RIGHT;
+            humanFigure.startWalkingRight();
             break;
     }
-    humanFigure.orientation = orientation;
-    humanFigure.speed = 4;
 }
 
 function figureStop() {
-    humanFigure.speed = 0;
+    humanFigure.stopWalking();
 }
 
 function Start() {

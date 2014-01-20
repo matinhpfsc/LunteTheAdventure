@@ -54,13 +54,13 @@ var gestures = {
                 // horizontale Bewegung
                 if (deltaX > gestures.touchSchwellwert) {
                     tools.log('Gesture nach rechts ' + deltaX + ':' + deltaY);
-                    playerMove('RIGHT');
+                    figureMove('RIGHT');
                     // gestures.isTouchStart = false;
                 }
 
                 if (deltaX < -gestures.touchSchwellwert) {
                     tools.log('Gesture nach links ' + deltaX + ':' + deltaY);
-                    playerMove('LEFT');
+                    figureMove('LEFT');
                     // gestures.isTouchStart = false;
                 }
             } else {
@@ -68,12 +68,12 @@ var gestures = {
                 if (deltaY > gestures.touchSchwellwert) {
                     tools.log('Gesture nach unten ' + deltaX + ':' + deltaY);
                     //gestures.isTouchStart = false;
-                    playerMove('DOWN');
+                    figureMove('DOWN');
                 }
 
                 if (deltaY < -gestures.touchSchwellwert) {
                     tools.log('Gesture nach oben ' + deltaX + ':' + deltaY);
-                    playerMove('UP');
+                    figureMove('UP');
                     //gestures.isTouchStart = false;
                 }
             }
@@ -86,7 +86,7 @@ var gestures = {
     touchEnd: function(event) {
         tools.log('touchEnd');
         gestures.isTouchStart = false;
-        playerStop();
+        figureStop();
 
     }
 };
