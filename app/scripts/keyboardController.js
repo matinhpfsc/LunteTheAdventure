@@ -1,3 +1,5 @@
+'use strict';
+
 function KeyboardController(figure)
 {
   this.controlledFigure = figure;

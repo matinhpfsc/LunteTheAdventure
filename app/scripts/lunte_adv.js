@@ -1,3 +1,5 @@
+'use strict';
+
 function Vector2d(x, y) {
     this.x = x;
     this.y = y;
@@ -22,7 +24,7 @@ function ViewPort(width, height) {
     this.height = height;
 }
 
-lastTimeStamp = 0;
+var lastTimeStamp = 0;
 
 function GameLoop(timeStamp) {
     var timeSpan = timeStamp - lastTimeStamp;
@@ -46,7 +48,7 @@ function GameLoop(timeStamp) {
         return;
     }
 
-    if (Math.floor((humanFigure.location.x + 25) / 50) == endCellColumn && Math.floor((humanFigure.location.y + 25) / 50) == endCellRow) {
+    if (Math.floor((humanFigure.location.x + 25) / 50) == gameMaze.endCellColumn && Math.floor((humanFigure.location.y + 25) / 50) == gameMaze.endCellRow) {
         alert("Exit achieved");
         return;
     }
@@ -66,8 +68,8 @@ function GameLoop(timeStamp) {
     }
 }
 
-counter = 0;
-start = 0;
+var counter = 0;
+var start = 0;
 
 function DrawCanvas(timeSpan) {
     DrawMaze();
@@ -84,8 +86,8 @@ function DrawMaze() {
     doubleBufferCanvasContext.drawImage(gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, windowWidth, windowHeight);
 }
 
-instrumentLayerImage = null;
-lastFigureEnergy = null;
+var instrumentLayerImage = null;
+var lastFigureEnergy = null;
 
 function DrawInstrumentLayer() {
 
@@ -113,6 +115,11 @@ function DrawInstrumentLayer() {
 function DrawToWindow() {
     canvasContext.drawImage(doubleBufferCanvas, 0, 0);
 }
+
+var imageCount = 3;
+var dungeonImage = null;
+var activeImage = null;
+var passiveImage = null;
 
 function StartImageLoading() {
     imageCount = 3;
@@ -222,6 +229,16 @@ function DrawFigure(currentFigure, viewPort, timeSpan) {
     }
 }
 
+var viewPort = null;
+var allFigures = null;
+var enemyFigures = null;
+var gameMaze = null;
+var gameMazeImage = null;
+var humanFigure = null;
+var doubleBufferCanvas = null;
+var doubleBufferCanvasContext = null;
+var instrumentLayerImageContext = null;
+
 function OnImageLoaded() {
     imageCount--;
     if (imageCount == 0) {
@@ -326,25 +343,28 @@ function figureMove(orientation) {
 
     switch (orientation) {
         case "UP":
-            orientation = UP;
+            humanFigure.startWalkingUp();
             break;
         case "DOWN":
-            orientation = DOWN;
+            humanFigure.startWalkingDown();
             break;
         case "LEFT":
-            orientation = LEFT;
+            humanFigure.startWalkingLeft();
             break;
         case "RIGHT":
-            orientation = RIGHT;
+            humanFigure.startWalkingRight();
             break;
     }
-    humanFigure.orientation = orientation;
-    humanFigure.speed = 4;
 }
 
 function figureStop() {
-    humanFigure.speed = 0;
+    humanFigure.stopWalking();
 }
+
+var mazeSpriteIndexes = [];
+var windowWidth = 0;
+var windowHeight = 0;
+var canvasContext = null;
 
 function Start() {
     //Set image indexes for the maze
