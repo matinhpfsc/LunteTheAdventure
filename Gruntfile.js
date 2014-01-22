@@ -130,6 +130,7 @@ module.exports = function(grunt) {
         // Jasmine testing framework configuration options
         jasmine: {
             all: {
+                src: '<%= yeoman.app %>/scripts/{,*/}*.js',
                 options: {
                     specs: 'test/spec/{,*/}*.js'
                 }
@@ -352,7 +353,7 @@ module.exports = function(grunt) {
 
         jsbeautifier: {
             format: {
-                src: ['Gruntfile.js', 'package.json', '<%= yeoman.app %>/scripts/{,*/}*.js']
+                src: ['Gruntfile.js', 'package.json', '<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/{,*/}*.js']
             }
         }
     });
