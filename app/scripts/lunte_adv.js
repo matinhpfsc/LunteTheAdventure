@@ -235,9 +235,9 @@ function OnImageLoaded() {
         }
         var botController = new Wall2WallBotController(enemyFigures, gameMaze);
         botController.start();
-	
-	var humanController = new KeyboardController(humanFigure);
-	humanController.start();
+
+        var humanController = new KeyboardController(humanFigure);
+        humanController.start();
 
         doubleBufferCanvas = document.createElement("canvas");
         doubleBufferCanvas.width = windowWidth;

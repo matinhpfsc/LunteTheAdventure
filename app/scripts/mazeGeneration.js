@@ -9,7 +9,7 @@ function Maze(width, height) {
     this.endCellColumn = 0;
     this.endCellRow = 0;
     var _this = this;
-    
+
     this.getFieldValue = function(cellColumn, cellRow) {
         if (cellColumn < 0 || cellRow < 0 || cellRow >= height || cellColumn >= width) {
             return this.EMPTY;
