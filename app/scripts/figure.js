@@ -1,3 +1,5 @@
+'use strict'
+
 function Figure(image, imageIndex)
 {
   this.location = new Vector2d(0,0);
@@ -15,9 +17,13 @@ function Figure(image, imageIndex)
   this.LEFT = new Vector2d(-1, 0);
   this.RIGHT = new Vector2d(+1, 0);
   
+  this.getMazeFieldLocation = function() {
+    return new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
+  };
+  
   this.move = function (timeSpan)
   {
-    var figureCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
+    var figureCellPosition = this.getMazeFieldLocation();
     
     var cellLocation = figureCellPosition.mul(50);
     
