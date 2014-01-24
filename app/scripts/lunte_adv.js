@@ -29,7 +29,7 @@ function GameLoop(timeStamp) {
         return;
     }
 
-    if (Math.floor((humanFigure.location.x + 25) / 50) == gameMaze.endCellColumn && Math.floor((humanFigure.location.y + 25) / 50) == gameMaze.endCellRow) {
+    if (Math.floor((humanFigure.location.x + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == gameMaze.endCellColumn && Math.floor((humanFigure.location.y + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == gameMaze.endCellRow) {
         alert("Exit achieved");
         return;
     }

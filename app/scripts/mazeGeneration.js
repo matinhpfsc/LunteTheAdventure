@@ -8,6 +8,7 @@ function Maze(width, height) {
     this.height = height;
     this.endCellColumn = 0;
     this.endCellRow = 0;
+    var _this = this;
     
     this.getFieldValue = function(cellColumn, cellRow) {
         if (cellColumn < 0 || cellRow < 0 || cellRow >= height || cellColumn >= width) {
@@ -34,23 +35,23 @@ function Maze(width, height) {
         var side = Math.floor(Math.random() * 4);
 
         if (side == 0) {
-            this.endCellRow = 0;
-            this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
-            mazeMatrix[0][this.endCellColumn] = 0;
+            _this.endCellRow = 0;
+            _this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
+            mazeMatrix[0][_this.endCellColumn] = 0;
         } else {
             if (side == 1) {
-                this.endCellRow = Math.floor(Math.random() * (height - 2)) + 1;
-                this.endCellColumn = width - 1;
+                _this.endCellRow = Math.floor(Math.random() * (height - 2)) + 1;
+                _this.endCellColumn = width - 1;
             } else {
                 if (side == 1) {
-                    this.endCellRow = height - 1;
-                    this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
+                    _this.endCellRow = height - 1;
+                    _this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
                 } else {
-                    this.endCellRow = Math.floor(Math.random() * (height - 2)) + 1;
-                    this.endCellColumn = 0;
+                    _this.endCellRow = Math.floor(Math.random() * (height - 2)) + 1;
+                    _this.endCellColumn = 0;
                 }
             }
-            mazeMatrix[this.endCellRow][this.endCellColumn] = 0;
+            mazeMatrix[_this.endCellRow][_this.endCellColumn] = 0;
         }
 
         DivideChamber(mazeMatrix, 1, 1, width - 2, height - 2);
