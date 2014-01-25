@@ -2,8 +2,7 @@
 
 var gestures =
 {
-    playerId: '',
-
+    controlledFigure: false,
     touchSchwellwert: 1,
     lunteObj: '',
     isTouchStart: false,
@@ -15,10 +14,12 @@ var gestures =
 
 
 
-    init: function ()
+    init: function ( figure)
     {
-        gestures.setObj();
-        gestures.addHandler();
+        this.setObj();
+        this.addHandler();
+        this.controlledFigure = figure;
+
     },
 
     setObj: function ()
@@ -100,12 +101,12 @@ var gestures =
                 // horizontale Bewegung
                 if (deltaX > gestures.touchSchwellwert)
                 {
-                    figureMove('RIGHT');
+                    gestures.controlledFigure.startWalkingRight();
                 }
 
                 if (deltaX < -gestures.touchSchwellwert)
                 {
-                    figureMove('LEFT');
+                    gestures.controlledFigure.startWalkingLeft();
                 }
             }
             else
@@ -113,12 +114,12 @@ var gestures =
                 // vertikale Bewegung
                 if (deltaY > gestures.touchSchwellwert)
                 {
-                    figureMove('DOWN');
+                    gestures.controlledFigure.startWalkingDown();
                 }
 
                 if (deltaY < -gestures.touchSchwellwert)
                 {
-                    figureMove('"UP');
+                    gestures.controlledFigure.startWalkingUp();
                 }
             }
 
@@ -140,12 +141,12 @@ var gestures =
                 // horizontale Bewegung
                 if (deltaX > gestures.touchSchwellwert)
                 {
-                    figureMove('RIGHT');
+                    gestures.controlledFigure.startWalkingRight();
                 }
 
                 if (deltaX < -gestures.touchSchwellwert)
                 {
-                    figureMove('LEFT');
+                    gestures.controlledFigure.startWalkingLeft();
                 }
             }
             else
@@ -153,12 +154,12 @@ var gestures =
                 // vertikale Bewegung
                 if (deltaY > gestures.touchSchwellwert)
                 {
-                    figureMove('DOWN');
+                    gestures.controlledFigure.startWalkingDown();
                 }
 
                 if (deltaY < -gestures.touchSchwellwert)
                 {
-                    figureMove('UP');
+                    gestures.controlledFigure.startWalkingUp();
                 }
             }
 
@@ -172,7 +173,7 @@ var gestures =
         if (event.button === 0)
         {
             gestures.isMouseStart = false;
-            figureStop();
+            gestures.controlledFigure.stopWalking();
         }
 
     },
@@ -182,7 +183,7 @@ var gestures =
         if (event.originalEvent.touches.length === 0)
         {
             gestures.isTouchStart = false;
-            figureStop();
+            gestures.controlledFigure.stopWalking();
         }
     }
 

@@ -260,6 +260,8 @@ function OnImageLoaded() {
 	var humanController = new KeyboardController(humanFigure);
 	humanController.start();
 
+    gestures.init(humanFigure);
+
         doubleBufferCanvas = document.createElement("canvas");
         doubleBufferCanvas.width = windowWidth;
         doubleBufferCanvas.height = windowHeight;
@@ -318,32 +320,6 @@ function ComputerControledMove() {
     }
 }
 
-function figureMove(orientation) {
-    // MH: die Gesten sind in einem gestures-Objekt gekapselt. Von dort aus kann ich nicht einfach so die
-    // Funktionen UP, DOWN... aufrufen. Daher übergebe ich das als String und konvertiere es hier,
-    // wenn es denn ein String ist.
-    // Das kann weg, wenn die lunte_adv.js auch Objekte sind.
-
-    switch (orientation) {
-        case "UP":
-            humanFigure.startWalkingUp();
-            break;
-        case "DOWN":
-            humanFigure.startWalkingDown();
-            break;
-        case "LEFT":
-            humanFigure.startWalkingLeft();
-            break;
-        case "RIGHT":
-            humanFigure.startWalkingRight();
-            break;
-    }
-}
-
-function figureStop() {
-    humanFigure.stopWalking();
-}
-
 var mazeSpriteIndexes = [];
 var windowWidth = 0;
 var windowHeight = 0;
@@ -395,6 +371,6 @@ function GetRequestAnimFrameFunction() {
 $(document).ready(function() {
     Start();
     //addHandler();
-    gestures.init();
+
 
 });
