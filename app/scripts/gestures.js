@@ -27,9 +27,9 @@ var gestures =
         this.lunteObj = $('#lunte-canvas');
     },
 
-    setPlayerId: function (id)
+    setControlledFigure: function (figure)
     {
-      this.playerId = id;
+      this.controlledFigure = figure;
     },
 
     addHandler: function ()
