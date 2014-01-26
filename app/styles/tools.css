@@ -1,0 +1,48 @@
+#osd
+{
+    background: #333;
+    color: yellow;
+    height: 180px;
+    margin-bottom: 10px;
+}
+
+#osd-content-wrapper
+{
+    height: 155px;
+    overflow: hidden;
+    padding-left: 2px;
+}
+
+#osd-content
+{
+    height: 177px;
+    overflow: auto;
+    width: 91%;
+    padding: 10px 0;
+}
+
+#osd-input input
+{
+    width: 90%;
+}
+
+#osd-input button
+{
+    width: 9%;
+}
+
+#osd-content p
+{
+    margin: 0;
+    padding: 0 10px;
+}
+
+#osd .error
+{
+    color: red;
+}
+
+#osd .code
+{
+    color: #66ffff;
+}

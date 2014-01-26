@@ -360,6 +360,7 @@ function GetRequestAnimFrameFunction() {
 $(document).ready(function() {
     Start();
     //addHandler();
+    tools.init();
     gestures.init();
 
 });
