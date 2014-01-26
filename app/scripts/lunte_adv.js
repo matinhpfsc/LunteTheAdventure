@@ -7,19 +7,17 @@ function ViewPort(width, height) {
     this.height = height;
 }
 
-var lastTimeStamp = 0;
-
 function GameLoop(timeStamp) {
     var timeSpan = timeStamp - lastTimeStamp;
-    timeSpan = Math.min(timeSpan, 1000); //To avoid greate jumps.
+    timeSpan = Math.min(timeSpan, constants.maximumAnimationTimeSpan); //To avoid greate jumps.
     lastTimeStamp = timeStamp;
 
     for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
         var currentFigure = allFigures[figureIndex];
         currentFigure.move(timeSpan);
         if (humanFigure.bulletproofCountdown == 0 && currentFigure.isCollided(humanFigure)) {
-            humanFigure.bulletproofCountdown = 3000;
-            humanFigure.energy = Math.max(0, humanFigure.energy - 35);
+            humanFigure.bulletproofCountdown = constants.bulletproofTimeSpan;
+            humanFigure.energy = Math.max(0, humanFigure.energy - constants.defaultEnergyCollisionDecrease);
         }
     }
 
@@ -31,7 +29,7 @@ function GameLoop(timeStamp) {
         return;
     }
 
-    if (Math.floor((humanFigure.location.x + 25) / 50) == gameMaze.endCellColumn && Math.floor((humanFigure.location.y + 25) / 50) == gameMaze.endCellRow) {
+    if (Math.floor((humanFigure.location.x + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == gameMaze.endCellColumn && Math.floor((humanFigure.location.y + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == gameMaze.endCellRow) {
         alert("Exit achieved");
         return;
     }
@@ -51,9 +49,6 @@ function GameLoop(timeStamp) {
     }
 }
 
-var counter = 0;
-var start = 0;
-
 function DrawCanvas(timeSpan) {
     DrawMaze();
 
@@ -68,9 +63,6 @@ function DrawCanvas(timeSpan) {
 function DrawMaze() {
     doubleBufferCanvasContext.drawImage(gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, windowWidth, windowHeight);
 }
-
-var instrumentLayerImage = null;
-var lastFigureEnergy = null;
 
 function DrawInstrumentLayer() {
 
@@ -98,11 +90,6 @@ function DrawInstrumentLayer() {
 function DrawToWindow() {
     canvasContext.drawImage(doubleBufferCanvas, 0, 0);
 }
-
-var imageCount = 3;
-var dungeonImage = null;
-var activeImage = null;
-var passiveImage = null;
 
 function StartImageLoading() {
     imageCount = 3;
@@ -212,16 +199,6 @@ function DrawFigure(currentFigure, viewPort, timeSpan) {
     }
 }
 
-var viewPort = null;
-var allFigures = null;
-var enemyFigures = null;
-var gameMaze = null;
-var gameMazeImage = null;
-var humanFigure = null;
-var doubleBufferCanvas = null;
-var doubleBufferCanvasContext = null;
-var instrumentLayerImageContext = null;
-
 function OnImageLoaded() {
     imageCount--;
     if (imageCount == 0) {
@@ -242,7 +219,7 @@ function OnImageLoaded() {
 
         gameMazeImage = CreateMazeImage();
 
-        enemyFigures = new Array();
+        var enemyFigures = new Array();
 
         for (var fieldPartX = 0; fieldPartX < size; fieldPartX++) {
             for (var fieldPartY = 0; fieldPartY < size; fieldPartY++) {
@@ -256,19 +233,18 @@ function OnImageLoaded() {
                 enemyFigures.push(enemyFigure);
             }
         }
+        var botController = new Wall2WallBotController(enemyFigures, gameMaze);
+        botController.start();
 
-	var humanController = new KeyboardController(humanFigure);
-	humanController.start();
+        var humanController = new KeyboardController(humanFigure);
+        humanController.start();
 
-    gestures.init(humanFigure);
+        gestures.init(humanFigure);
 
         doubleBufferCanvas = document.createElement("canvas");
         doubleBufferCanvas.width = windowWidth;
         doubleBufferCanvas.height = windowHeight;
         doubleBufferCanvasContext = doubleBufferCanvas.getContext("2d");
-
-        //TODO Was passiert hier bei mehrmaligen Aufruf?
-        setInterval(ComputerControledMove, 250);
 
         GameLoop(null);
     }
@@ -291,35 +267,24 @@ function StartNewLevel() {}
 
 function EndLevel() {}
 
-function ComputerControledMove() {
-    for (var figureIndex = 0; figureIndex < enemyFigures.length; figureIndex++) {
-        var currentFigure = enemyFigures[figureIndex];
-        var figureCellPosition = new Vector2d(Math.floor((currentFigure.location.x + 24.5) / 50), Math.floor((currentFigure.location.y + 25.5) / 50));
 
-        if (gameMaze.getFieldValue(figureCellPosition.x + currentFigure.orientation.x, figureCellPosition.y + currentFigure.orientation.y) == 1) {
-            var possibleWays = new Array();
-            if (gameMaze.getFieldValue(figureCellPosition.x + 0, figureCellPosition.y + 1) == 0 && !currentFigure.orientation.equals(new Vector2d(0, -1))) {
-                possibleWays.push(new Vector2d(0, 1));
-            }
-            if (gameMaze.getFieldValue(figureCellPosition.x + 1, figureCellPosition.y + 0) == 0 && !currentFigure.orientation.equals(new Vector2d(-1, 0))) {
-                possibleWays.push(new Vector2d(1, 0));
-            }
-            if (gameMaze.getFieldValue(figureCellPosition.x + 0, figureCellPosition.y - 1) == 0 && !currentFigure.orientation.equals(new Vector2d(0, 1))) {
-                possibleWays.push(new Vector2d(0, -1));
-            }
-            if (gameMaze.getFieldValue(figureCellPosition.x - 1, figureCellPosition.y + 0) == 0 && !currentFigure.orientation.equals(new Vector2d(1, 0))) {
-                possibleWays.push(new Vector2d(-1, 0));
-            }
-
-            if (possibleWays.length > 0) {
-                currentFigure.orientation = possibleWays[Math.floor(Math.random() * possibleWays.length)];
-            } else {
-                currentFigure.orientation = currentFigure.orientation.mul(-1);
-            }
-        }
-    }
-}
-
+var lastTimeStamp = 0;
+var counter = 0;
+var start = 0;
+var instrumentLayerImage = null;
+var lastFigureEnergy = null;
+var imageCount = 3;
+var dungeonImage = null;
+var activeImage = null;
+var passiveImage = null;
+var viewPort = null;
+var allFigures = null;
+var gameMaze = null;
+var gameMazeImage = null;
+var humanFigure = null;
+var doubleBufferCanvas = null;
+var doubleBufferCanvasContext = null;
+var instrumentLayerImageContext = null;
 var mazeSpriteIndexes = [];
 var windowWidth = 0;
 var windowHeight = 0;
