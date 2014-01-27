@@ -53,7 +53,7 @@ function DrawCanvas(timeSpan) {
     DrawMaze();
 
     for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
-        DrawFigure(allFigures[figureIndex], viewPort, timeSpan);
+        allFigures[figureIndex].draw(doubleBufferCanvasContext, viewPort);
     }
 
     DrawInstrumentLayer();
@@ -174,30 +174,6 @@ function CreateMazeImage() {
     return mazeCanvas;
 }
 
-function DrawFigure(currentFigure, viewPort, timeSpan) {
-    var animationIndex = 0;
-    if (currentFigure.speed != 0) {
-        currentFigure.animationStartTimeStamp += timeSpan;
-        animationIndex = Math.floor(currentFigure.animationStartTimeStamp / 100) % 8;
-    }
-    var spriteIndex = 0;
-    if (currentFigure.orientation.x > 0) {
-        spriteIndex = 24;
-    }
-    if (currentFigure.orientation.x < 0) {
-        spriteIndex = 8;
-    }
-    if (currentFigure.orientation.y > 0) {
-        spriteIndex = 16;
-    }
-    spriteIndex += currentFigure.imageIndex * 4 * 8 + animationIndex;
-    var spriteY = Math.floor(spriteIndex / 8);
-    var spriteX = spriteIndex % 8;
-
-    if ((Math.floor(currentFigure.bulletproofCountdown / 100)) % 3 < 2) {
-        doubleBufferCanvasContext.drawImage(currentFigure.image, 50 * spriteX, 50 * spriteY, 50, 50, currentFigure.location.x - viewPort.x, currentFigure.location.y - viewPort.y, 50, 50);
-    }
-}
 
 function OnImageLoaded() {
     imageCount--;
