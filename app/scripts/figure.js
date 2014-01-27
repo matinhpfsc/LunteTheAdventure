@@ -30,7 +30,7 @@ function Figure(image, imageIndex) {
         var currentFigureSpeed = this.speed;
         if (currentFigureSpeed > distanceToCellLocation) {
             //Pruefe, ob naechtse Zelle begehbar ist.
-            if (gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
+            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
                 currentFigureSpeed = distanceToCellLocation;
             } else {
                 var distanceToOtherCellLocation = ((cellLocation.x - this.location.x) * Math.abs(this.orientation.y) + (cellLocation.y - this.location.y) * Math.abs(this.orientation.x));
@@ -87,4 +87,6 @@ function Figure(image, imageIndex) {
     this.stopWalking = function() {
         this.speed = 0;
     }
+
+    return this;
 }

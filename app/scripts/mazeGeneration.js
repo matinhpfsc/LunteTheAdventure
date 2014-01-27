@@ -165,4 +165,47 @@ function Maze(width, height) {
         }
         return null;
     }
+
+
+    this.GetSpriteIndex = function (cellColumn, cellRow) {
+        if (_this.getFieldValue(cellColumn, cellRow) == 0) {
+            return 8;
+        } else {
+            var left = _this.getFieldValue(cellColumn - 1, cellRow);
+            var right = _this.getFieldValue(cellColumn + 1, cellRow);
+            var top = _this.getFieldValue(cellColumn, cellRow - 1);
+            var bottom = _this.getFieldValue(cellColumn, cellRow + 1);
+
+            var number = left * 8 + bottom * 4 + right * 2 + top * 1;
+
+            return mazeSpriteIndexes[number];
+        }
+    };
+
+
+
+    this.CreateMazeImage = function() {
+        var mazeCanvas = document.createElement("canvas");
+        mazeCanvas.width = _this.width * 50;
+        mazeCanvas.height = _this.height * 50;
+        //mazeCanvas.width = 50*16;
+        //mazeCanvas.height = 50 * 12;
+        var mazeCanvasContext = mazeCanvas.getContext("2d");
+
+        //for (var cellColumn = 0; cellColumn < game.level.gameMaze.width; cellColumn++) {
+//        for (var cellRow = 0; cellRow < game.level.gameMaze.height; cellRow++) {
+        for (var cellColumn = 0; cellColumn < mazeCanvas.width; cellColumn++) {
+            for (var cellRow = 0; cellRow < mazeCanvas.height; cellRow++) {
+                var spriteIndex = this.GetSpriteIndex(cellColumn, cellRow);
+
+                var spriteY = Math.floor(spriteIndex / 5);
+                var spriteX = spriteIndex % 5;
+                mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
+            }
+        }
+
+        return mazeCanvas;
+    };
+
+    return this;
 }
