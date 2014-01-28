@@ -50,7 +50,7 @@ function GameLoop(timeStamp) {
 }
 
 function DrawCanvas(timeSpan) {
-    DrawMaze();
+    gameMaze.draw(doubleBufferCanvasContext, viewPort);
 
     for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
         allFigures[figureIndex].draw(doubleBufferCanvasContext, viewPort);
@@ -60,9 +60,6 @@ function DrawCanvas(timeSpan) {
     DrawToWindow();
 }
 
-function DrawMaze() {
-    doubleBufferCanvasContext.drawImage(gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, windowWidth, windowHeight);
-}
 
 function DrawInstrumentLayer() {
 
@@ -107,20 +104,6 @@ function StartImageLoading() {
     passiveImage.src = "images/passive.png";
 }
 
-function GetSpriteIndex(cellColumn, cellRow) {
-    if (gameMaze.getFieldValue(cellColumn, cellRow) == 0) {
-        return 8;
-    } else {
-        var left = gameMaze.getFieldValue(cellColumn - 1, cellRow);
-        var right = gameMaze.getFieldValue(cellColumn + 1, cellRow);
-        var top = gameMaze.getFieldValue(cellColumn, cellRow - 1);
-        var bottom = gameMaze.getFieldValue(cellColumn, cellRow + 1);
-
-        var number = left * 8 + bottom * 4 + right * 2 + top * 1;
-
-        return mazeSpriteIndexes[number];
-    }
-}
 
 function CorrectViewPort() {
     var width = gameMaze.width;
@@ -155,26 +138,6 @@ function CorrectViewPort() {
     }
 }
 
-function CreateMazeImage() {
-    var mazeCanvas = document.createElement("canvas");
-    mazeCanvas.width = gameMaze.width * 50;
-    mazeCanvas.height = gameMaze.height * 50;
-    var mazeCanvasContext = mazeCanvas.getContext("2d");
-
-    for (var cellColumn = 0; cellColumn < gameMaze.width; cellColumn++) {
-        for (var cellRow = 0; cellRow < gameMaze.height; cellRow++) {
-            var spriteIndex = GetSpriteIndex(cellColumn, cellRow);
-
-            var spriteY = Math.floor(spriteIndex / 5);
-            var spriteX = spriteIndex % 5;
-            mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
-        }
-    }
-
-    return mazeCanvas;
-}
-
-
 function OnImageLoaded() {
     imageCount--;
     if (imageCount == 0) {
@@ -191,9 +154,7 @@ function OnImageLoaded() {
         humanFigure.location.y = 50;
         allFigures.push(humanFigure);
 
-        gameMaze = new Maze(width, height);
-
-        gameMazeImage = CreateMazeImage();
+        gameMaze = new Maze(width, height, dungeonImage);
 
         var enemyFigures = new Array();
 
@@ -243,7 +204,6 @@ function StartNewLevel() {}
 
 function EndLevel() {}
 
-
 var lastTimeStamp = 0;
 var counter = 0;
 var start = 0;
@@ -256,35 +216,15 @@ var passiveImage = null;
 var viewPort = null;
 var allFigures = null;
 var gameMaze = null;
-var gameMazeImage = null;
 var humanFigure = null;
 var doubleBufferCanvas = null;
 var doubleBufferCanvasContext = null;
 var instrumentLayerImageContext = null;
-var mazeSpriteIndexes = [];
 var windowWidth = 0;
 var windowHeight = 0;
 var canvasContext = null;
 
 function Start() {
-    //Set image indexes for the maze
-    mazeSpriteIndexes = new Array(16);
-    mazeSpriteIndexes[0] = 20;
-    mazeSpriteIndexes[1] = 30;
-    mazeSpriteIndexes[2] = 32;
-    mazeSpriteIndexes[3] = 31;
-    mazeSpriteIndexes[4] = 25;
-    mazeSpriteIndexes[5] = 26;
-    mazeSpriteIndexes[6] = 21;
-    mazeSpriteIndexes[7] = 29;
-    mazeSpriteIndexes[8] = 33;
-    mazeSpriteIndexes[9] = 28;
-    mazeSpriteIndexes[10] = 22;
-    mazeSpriteIndexes[11] = 24;
-    mazeSpriteIndexes[12] = 23;
-    mazeSpriteIndexes[13] = 19;
-    mazeSpriteIndexes[14] = 34;
-    mazeSpriteIndexes[15] = 27;
 
     var canvas = document.getElementById("lunte-canvas");
 
@@ -312,6 +252,4 @@ function GetRequestAnimFrameFunction() {
 $(document).ready(function() {
     Start();
     //addHandler();
-
-
 });
