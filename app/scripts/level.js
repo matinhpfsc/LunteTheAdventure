@@ -15,14 +15,12 @@ function Level() {
     // Size from Imagecount
     this.gameMaze = new Maze(32, 24);
     this.gameMazeImage = this.gameMaze.CreateMazeImage(this.gameMaze);
-    gameMazeImage = this.gameMazeImage;
 
     this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
 
     this.doCorrectViewPort = function (){
         this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
     };
-    //this.gameMazeImage = CreateMazeImage();
 
     this.enemyFigures = new Array();
 
@@ -30,7 +28,7 @@ function Level() {
     for (var fieldPartX = 0; fieldPartX < size; fieldPartX++) {
         for (var fieldPartY = 0; fieldPartY < size; fieldPartY++) {
             var enemyFigure = new Figure(passiveImage, Math.floor(Math.random() * 2));
-            var v = GetNearestFreeFieldVector(this.gameMaze, new Vector2d(8 * (2 * fieldPartX + 1), 6 * (2 * fieldPartY + 1)));
+            var v = this.gameMaze.GetNearestFreeFieldVector(new Vector2d(8 * (2 * fieldPartX + 1), 6 * (2 * fieldPartY + 1)));
 
             enemyFigure.location.x = 50 * v.x;
             enemyFigure.location.y = 50 * v.y;

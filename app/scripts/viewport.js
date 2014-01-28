@@ -43,6 +43,6 @@ function ViewPort(width, height) {
         }
     };
 
-    window.viewPort = this;
+  //  window.viewPort = this;
     return this;
 }

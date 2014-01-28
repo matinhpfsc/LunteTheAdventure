@@ -2,7 +2,7 @@ function DrawCanvas(timeSpan) {
     DrawMaze();
 
     for (var figureIndex = 0; figureIndex < game.level.allFigures.length; figureIndex++) {
-        DrawFigure(game.level.allFigures[figureIndex], viewPort, timeSpan);
+        DrawFigure(game.level.allFigures[figureIndex], game.level.viewPort, timeSpan);
     }
 
     DrawInstrumentLayer();
@@ -11,7 +11,7 @@ function DrawCanvas(timeSpan) {
 
 function DrawMaze() {
     //tools.log('gameMazeImage:'+gameMazeImage);
-    doubleBufferCanvasContext.drawImage(game.level.gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, windowWidth, windowHeight);
+    doubleBufferCanvasContext.drawImage(game.level.gameMazeImage, game.level.viewPort.x, game.level.viewPort.y, game.level.viewPort.width, game.level.viewPort.height, 0, 0, windowWidth, windowHeight);
 }
 
 function DrawInstrumentLayer() {
@@ -46,15 +46,15 @@ function StartImageLoading() {
 
     dungeonImage = new Image();
     dungeonImage.onload = OnImageLoaded;
-    dungeonImage.src = "images/dungeon3.png"
+    dungeonImage.src = 'images/dungeon3.png';
 
     activeImage = new Image();
     activeImage.onload = OnImageLoaded;
-    activeImage.src = "images/aktive.png";
+    activeImage.src = 'images/aktive.png';
 
     passiveImage = new Image();
     passiveImage.onload = OnImageLoaded;
-    passiveImage.src = "images/passive.png";
+    passiveImage.src = 'images/passive.png';
 }
 
 
@@ -90,72 +90,24 @@ function DrawFigure(currentFigure, viewPort, timeSpan) {
 
 function OnImageLoaded() {
     imageCount--;
-    if (imageCount == 0) {
+    if (imageCount === 0) {
         var size = 2;
         var width = 16 * size;
         var height = 12 * size;
 
-    game = new Game();
-/*
-        viewPort = new ViewPort(windowWidth, windowHeight);
 
-        allFigures = new Array();
-
-        humanFigure = new Figure(activeImage, 1);
-        humanFigure.location.x = 50;
-        humanFigure.location.y = 50;
-        allFigures.push(humanFigure);
-
-        gameMaze = new Maze(width, height);
-
-        gameMazeImage = CreateMazeImage();
-
-        var enemyFigures = new Array();
-
-        for (var fieldPartX = 0; fieldPartX < size; fieldPartX++) {
-            for (var fieldPartY = 0; fieldPartY < size; fieldPartY++) {
-                var enemyFigure = new Figure(passiveImage, Math.floor(Math.random() * 2));
-                var v = GetNearestFreeFieldVector(gameMaze, new Vector2d(8 * (2 * fieldPartX + 1), 6 * (2 * fieldPartY + 1)));
-
-                enemyFigure.location.x = 50 * v.x;
-                enemyFigure.location.y = 50 * v.y;
-                enemyFigure.speed = 2;
-                allFigures.push(enemyFigure);
-                enemyFigures.push(enemyFigure);
-            }
-        }
-        var botController = new Wall2WallBotController(enemyFigures, gameMaze);
-        botController.start();
-
-        var humanController = new KeyboardController(humanFigure);
-        humanController.start();
-
-        gestures.init(humanFigure);
-*/
         doubleBufferCanvas = document.createElement("canvas");
         doubleBufferCanvas.width = windowWidth;
         doubleBufferCanvas.height = windowHeight;
         doubleBufferCanvasContext = doubleBufferCanvas.getContext("2d");
 
+        game = new Game();
         game.gameLoop(null);
     }
 }
 
-function GetNearestFreeFieldVector(maze, startVector) {
-    var xArray = new Array(0, 0, -1, -1, -1, 0, +1, +1, +1);
-    var yArray = new Array(0, -1, -1, 0, +1, +1, +1, 0, -1);
-
-    for (var index = 0; index < xArray.length; index++) {
-        var fieldVector = startVector.add(new Vector2d(xArray[index], yArray[index]));
-        if (maze.getFieldValue(fieldVector.x, fieldVector.y) == 0) {
-            return fieldVector;
-        }
-    }
-    return null;
-}
-
 var game = null;
-var lastTimeStamp = 0;
+//var lastTimeStamp = 0;
 var counter = 0;
 var start = 0;
 var instrumentLayerImage = null;
@@ -164,11 +116,6 @@ var imageCount = 3;
 var dungeonImage = null;
 var activeImage = null;
 var passiveImage = null;
-var viewPort = null;
-var allFigures = null;
-var gameMaze = null;
-var gameMazeImage = null;
-var humanFigure = null;
 var doubleBufferCanvas = null;
 var doubleBufferCanvasContext = null;
 var instrumentLayerImageContext = null;
@@ -222,7 +169,4 @@ function GetRequestAnimFrameFunction() {
 
 $(document).ready(function() {
     Start();
-    //addHandler();
-
-
 });

@@ -2,6 +2,10 @@
 
 function Game() {
     var _this = this;
+    var lastTimeStamp = 0;
+
+    var isPlaying = true;
+
     this.level = new Level();
 
     this.gameLoop = function (timeStamp) {
@@ -12,7 +16,7 @@ function Game() {
         for (var figureIndex = 0; figureIndex < _this.level.allFigures.length; figureIndex++) {
             var currentFigure = _this.level.allFigures[figureIndex];
             currentFigure.move(timeSpan);
-            if (_this.level.humanFigure.bulletproofCountdown == 0 && currentFigure.isCollided(_this.level.humanFigure)) {
+            if (_this.level.humanFigure.bulletproofCountdown === 0 && currentFigure.isCollided(_this.level.humanFigure)) {
                 _this.level.humanFigure.bulletproofCountdown = constants.bulletproofTimeSpan;
                 _this.level.humanFigure.energy = Math.max(0, _this.level.humanFigure.energy - constants.defaultEnergyCollisionDecrease);
             }
@@ -22,14 +26,14 @@ function Game() {
         DrawCanvas(timeSpan, _this.level.viewPort);
 
         if (_this.level.humanFigure.energy <= 0) {
-            alert("You are death");
+            alert('You are death');
             return;
         }
 
+        // Ausgang erreicht
         if (Math.floor((_this.level.humanFigure.location.x + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellColumn && Math.floor((_this.level.humanFigure.location.y + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellRow) {
             _this.level = new Level();
-            _this.gameLoop();
-            //alert('Exit erreicht');
+            _this.setPlay();
 
             return;
         }
@@ -46,9 +50,23 @@ function Game() {
          alert(fps);
          }
          */
+
+        if (isPlaying)
         {
             window.requestAnimFrame(_this.gameLoop);
         }
+    };
+
+    this.setPause = function ()
+    {
+        isPlaying = false;
+    };
+
+    this.setPlay = function ()
+    {
+        isPlaying = true;
+        //lastTimeStamp = 0;
+        this.gameLoop();
     };
 
     return this;

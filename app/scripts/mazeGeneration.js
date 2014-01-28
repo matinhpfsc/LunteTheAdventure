@@ -207,5 +207,19 @@ function Maze(width, height) {
         return mazeCanvas;
     };
 
+    this.GetNearestFreeFieldVector = function (startVector) {
+        var xArray = new Array(0, 0, -1, -1, -1, 0, +1, +1, +1);
+        var yArray = new Array(0, -1, -1, 0, +1, +1, +1, 0, -1);
+
+        for (var index = 0; index < xArray.length; index++) {
+            var fieldVector = startVector.add(new Vector2d(xArray[index], yArray[index]));
+            if (this.getFieldValue(fieldVector.x, fieldVector.y) == 0) {
+                return fieldVector;
+            }
+        }
+        return null;
+    }
+
+
     return this;
 }
