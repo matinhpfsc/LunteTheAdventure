@@ -43,13 +43,9 @@ function GameLoop(timeStamp) {
 }
 
 function DrawCanvas(timeSpan) {
-    gameMaze.draw(canvasContext, viewPort);
-
-    for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
-        allFigures[figureIndex].draw(canvasContext, viewPort);
+    for (var drawingObjectIndex = 0; drawingObjectIndex < drawingObjects.length; drawingObjectIndex++) {
+        drawingObjects[drawingObjectIndex].draw(canvasContext, viewPort);
     }
-
-    viewPort.draw(canvasContext, viewPort);
 }
 
 function StartImageLoading() {
@@ -76,7 +72,6 @@ function OnImageLoaded() {
         var size = 2;
         var width = 16 * size;
         var height = 12 * size;
-
 
         allFigures = new Array();
 
@@ -110,6 +105,13 @@ function OnImageLoaded() {
         humanController.start();
 
         gestures.init(humanFigure);
+
+        drawingObjects = new Array();
+        drawingObjects.push(gameMaze);
+        for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
+            drawingObjects.push(allFigures[figureIndex]);
+        }
+        drawingObjects.push(viewPort);
 
         GameLoop(null);
     }
@@ -146,6 +148,7 @@ var humanFigure = null;
 var windowWidth = 0;
 var windowHeight = 0;
 var canvasContext = null;
+var drawingObjects = null;
 
 function Start() {
 
