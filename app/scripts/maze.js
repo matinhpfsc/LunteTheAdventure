@@ -1,8 +1,27 @@
 'use strict';
 
-function Maze(width, height) {
+function Maze(width, height, dungeonImage) {
     this.EMPTY = 0;
     this.WALL = 1;
+
+    //Set image indexes for the maze fields
+    this.mazeSpriteIndexes = new Array(16);
+    this.mazeSpriteIndexes[0] = 20;
+    this.mazeSpriteIndexes[1] = 30;
+    this.mazeSpriteIndexes[2] = 32;
+    this.mazeSpriteIndexes[3] = 31;
+    this.mazeSpriteIndexes[4] = 25;
+    this.mazeSpriteIndexes[5] = 26;
+    this.mazeSpriteIndexes[6] = 21;
+    this.mazeSpriteIndexes[7] = 29;
+    this.mazeSpriteIndexes[8] = 33;
+    this.mazeSpriteIndexes[9] = 28;
+    this.mazeSpriteIndexes[10] = 22;
+    this.mazeSpriteIndexes[11] = 24;
+    this.mazeSpriteIndexes[12] = 23;
+    this.mazeSpriteIndexes[13] = 19;
+    this.mazeSpriteIndexes[14] = 34;
+    this.mazeSpriteIndexes[15] = 27;
 
     this.width = width;
     this.height = height;
@@ -10,14 +29,8 @@ function Maze(width, height) {
     this.endCellRow = 0;
     var _this = this;
 
-    this.getFieldValue = function(cellColumn, cellRow) {
-        if (cellColumn < 0 || cellRow < 0 || cellRow >= height || cellColumn >= width) {
-            return this.EMPTY;
-        }
-        return mazeMatrix[cellRow][cellColumn];
-    };
-
-    var mazeMatrix = new CreateLabyrint(width, height);
+    this.mazeMatrix = new CreateLabyrint(width, height);
+    this.gameMazeImage = this.CreateMazeImage(dungeonImage);
 
     function CreateLabyrint(width, height) {
         var mazeMatrix = [];
@@ -166,3 +179,47 @@ function Maze(width, height) {
         return null;
     }
 }
+
+Maze.prototype.getFieldValue = function(cellColumn, cellRow) {
+    if (cellColumn < 0 || cellRow < 0 || cellRow >= this.height || cellColumn >= this.width) {
+        return this.EMPTY;
+    }
+    return this.mazeMatrix[cellRow][cellColumn];
+};
+
+Maze.prototype.draw = function(canvasContext, viewPort) {
+    canvasContext.drawImage(this.gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, viewPort.width, viewPort.height);
+};
+
+Maze.prototype.GetSpriteIndex = function(cellColumn, cellRow) {
+    if (this.getFieldValue(cellColumn, cellRow) == this.EMPTY) {
+        return 8;
+    } else {
+        var left = this.getFieldValue(cellColumn - 1, cellRow);
+        var right = this.getFieldValue(cellColumn + 1, cellRow);
+        var top = this.getFieldValue(cellColumn, cellRow - 1);
+        var bottom = this.getFieldValue(cellColumn, cellRow + 1);
+
+        var number = left * 8 + bottom * 4 + right * 2 + top * 1;
+
+        return this.mazeSpriteIndexes[number];
+    }
+};
+
+Maze.prototype.CreateMazeImage = function(dungeonImage) {
+    var mazeCanvas = document.createElement("canvas");
+    mazeCanvas.width = this.width * 50;
+    mazeCanvas.height = this.height * 50;
+    var mazeCanvasContext = mazeCanvas.getContext("2d");
+    for (var cellColumn = 0; cellColumn < this.width; cellColumn++) {
+       for (var cellRow = 0; cellRow < this.height; cellRow++) {
+           var spriteIndex = this.GetSpriteIndex(cellColumn, cellRow);
+
+           var spriteY = Math.floor(spriteIndex / 5);
+           var spriteX = spriteIndex % 5;
+           mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
+       }
+    }
+
+    return mazeCanvas;
+};

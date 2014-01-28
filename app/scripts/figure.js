@@ -52,6 +52,10 @@ function Figure(image, imageIndex) {
                 this.bulletproofCountdown = 0;
             }
         }
+
+        if (this.speed != 0) {
+            this.animationStartTimeStamp += timeSpan;
+        }
     };
 
     this.isCollided = function(otherFigure) {
@@ -86,5 +90,28 @@ function Figure(image, imageIndex) {
 
     this.stopWalking = function() {
         this.speed = 0;
+        this.animationStartTimeStamp = 0;
+    }
+}
+
+
+Figure.prototype.draw = function(canvasContext, viewPort) {
+    var animationIndex = Math.floor(this.animationStartTimeStamp / 100) % 8;
+    var spriteIndex = 0;
+    if (this.orientation.x > 0) {
+        spriteIndex = 24;
+    }
+    if (this.orientation.x < 0) {
+        spriteIndex = 8;
+    }
+    if (this.orientation.y > 0) {
+        spriteIndex = 16;
+    }
+    spriteIndex += this.imageIndex * 4 * 8 + animationIndex;
+    var spriteY = Math.floor(spriteIndex / 8);
+    var spriteX = spriteIndex % 8;
+
+    if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
+        canvasContext.drawImage(this.image, 50 * spriteX, 50 * spriteY, 50, 50, this.location.x - viewPort.x, this.location.y - viewPort.y, 50, 50);
     }
 }
