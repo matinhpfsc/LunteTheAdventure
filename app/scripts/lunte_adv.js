@@ -1,12 +1,5 @@
 'use strict';
 
-function ViewPort(width, height) {
-    this.x = 0;
-    this.y = 0;
-    this.width = width;
-    this.height = height;
-}
-
 function GameLoop(timeStamp) {
     var timeSpan = timeStamp - lastTimeStamp;
     timeSpan = Math.min(timeSpan, constants.maximumAnimationTimeSpan); //To avoid greate jumps.
@@ -21,7 +14,7 @@ function GameLoop(timeStamp) {
         }
     }
 
-    CorrectViewPort();
+    viewPort.CorrectViewPort();
     DrawCanvas(timeSpan);
 
     if (humanFigure.energy <= 0) {
@@ -56,33 +49,10 @@ function DrawCanvas(timeSpan) {
         allFigures[figureIndex].draw(doubleBufferCanvasContext, viewPort);
     }
 
-    DrawInstrumentLayer();
+    viewPort.draw(doubleBufferCanvasContext, viewPort);
     DrawToWindow();
 }
 
-
-function DrawInstrumentLayer() {
-
-    if (instrumentLayerImage == null) {
-        instrumentLayerImage = document.createElement("canvas");
-        instrumentLayerImage.width = windowWidth;
-        instrumentLayerImage.height = windowHeight;
-        instrumentLayerImageContext = instrumentLayerImage.getContext("2d");
-    }
-
-    if (lastFigureEnergy != humanFigure.energy) {
-        if (lastFigureEnergy == null) {
-            instrumentLayerImageContext.fillStyle = "#FF0000";
-            instrumentLayerImageContext.strokeStyle = "#000000";
-        }
-        lastFigureEnergy = humanFigure.energy;
-        instrumentLayerImageContext.clearRect(windowWidth - 150, 0, 104, 50);
-        instrumentLayerImageContext.fillRect(windowWidth - 148, 22, lastFigureEnergy, 10);
-        instrumentLayerImageContext.strokeRect(windowWidth - 150, 20, 104, 14);
-    }
-
-    doubleBufferCanvasContext.drawImage(instrumentLayerImage, 0, 0);
-}
 
 function DrawToWindow() {
     canvasContext.drawImage(doubleBufferCanvas, 0, 0);
@@ -105,38 +75,6 @@ function StartImageLoading() {
 }
 
 
-function CorrectViewPort() {
-    var width = gameMaze.width;
-    var height = gameMaze.height;
-
-    var currentFigure = humanFigure;
-
-    if (currentFigure.location.x - viewPort.x > windowWidth - 150) {
-        viewPort.x = currentFigure.location.x - windowWidth + 150;
-    }
-    if (currentFigure.location.x - viewPort.x < 100) {
-        viewPort.x = currentFigure.location.x - 100;
-    }
-    if (currentFigure.location.y - viewPort.y > windowHeight - 150) {
-        viewPort.y = currentFigure.location.y - windowHeight + 150;
-    }
-    if (currentFigure.location.y - viewPort.y < 100) {
-        viewPort.y = currentFigure.location.y - 100;
-    }
-
-    if (viewPort.x + windowWidth > width * 50) {
-        viewPort.x = width * 50 - windowWidth;
-    }
-    if (viewPort.x < 0) {
-        viewPort.x = 0;
-    }
-    if (viewPort.y + windowHeight > height * 50) {
-        viewPort.y = height * 50 - windowHeight;
-    }
-    if (viewPort.y < 0) {
-        viewPort.y = 0;
-    }
-}
 
 function OnImageLoaded() {
     imageCount--;
@@ -145,7 +83,6 @@ function OnImageLoaded() {
         var width = 16 * size;
         var height = 12 * size;
 
-        viewPort = new ViewPort(windowWidth, windowHeight);
 
         allFigures = new Array();
 
@@ -153,6 +90,8 @@ function OnImageLoaded() {
         humanFigure.location.x = 50;
         humanFigure.location.y = 50;
         allFigures.push(humanFigure);
+
+        viewPort = new ViewPort(windowWidth, windowHeight, width * 50, height * 50, humanFigure);
 
         gameMaze = new Maze(width, height, dungeonImage);
 
@@ -207,8 +146,6 @@ function EndLevel() {}
 var lastTimeStamp = 0;
 var counter = 0;
 var start = 0;
-var instrumentLayerImage = null;
-var lastFigureEnergy = null;
 var imageCount = 3;
 var dungeonImage = null;
 var activeImage = null;
@@ -219,7 +156,6 @@ var gameMaze = null;
 var humanFigure = null;
 var doubleBufferCanvas = null;
 var doubleBufferCanvasContext = null;
-var instrumentLayerImageContext = null;
 var windowWidth = 0;
 var windowHeight = 0;
 var canvasContext = null;
