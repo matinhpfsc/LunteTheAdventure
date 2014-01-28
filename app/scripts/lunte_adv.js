@@ -43,19 +43,13 @@ function GameLoop(timeStamp) {
 }
 
 function DrawCanvas(timeSpan) {
-    gameMaze.draw(doubleBufferCanvasContext, viewPort);
+    gameMaze.draw(canvasContext, viewPort);
 
     for (var figureIndex = 0; figureIndex < allFigures.length; figureIndex++) {
-        allFigures[figureIndex].draw(doubleBufferCanvasContext, viewPort);
+        allFigures[figureIndex].draw(canvasContext, viewPort);
     }
 
-    viewPort.draw(doubleBufferCanvasContext, viewPort);
-    DrawToWindow();
-}
-
-
-function DrawToWindow() {
-    canvasContext.drawImage(doubleBufferCanvas, 0, 0);
+    viewPort.draw(canvasContext, viewPort);
 }
 
 function StartImageLoading() {
@@ -117,11 +111,6 @@ function OnImageLoaded() {
 
         gestures.init(humanFigure);
 
-        doubleBufferCanvas = document.createElement("canvas");
-        doubleBufferCanvas.width = windowWidth;
-        doubleBufferCanvas.height = windowHeight;
-        doubleBufferCanvasContext = doubleBufferCanvas.getContext("2d");
-
         GameLoop(null);
     }
 }
@@ -154,8 +143,6 @@ var viewPort = null;
 var allFigures = null;
 var gameMaze = null;
 var humanFigure = null;
-var doubleBufferCanvas = null;
-var doubleBufferCanvasContext = null;
 var windowWidth = 0;
 var windowHeight = 0;
 var canvasContext = null;
