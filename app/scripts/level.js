@@ -1,8 +1,9 @@
 'use strict';
 
-function Level() {
+function Level(thisGame) {
 
     var _this = this;
+    var thisGame = thisGame;
 
     this.viewPort = new ViewPort(windowWidth, windowHeight);
     this.allFigures = new Array();
@@ -11,6 +12,10 @@ function Level() {
     this.humanFigure.location.x = 50;
     this.humanFigure.location.y = 50;
     this.allFigures.push(this.humanFigure);
+
+    thisGame.humanController.start(this.humanFigure);
+    gestures.init(this.humanFigure);
+
 
     // Size from Imagecount
     this.gameMaze = new Maze(32, 24);
@@ -39,11 +44,6 @@ function Level() {
     }
     this.botController = new Wall2WallBotController(this.enemyFigures, this.gameMaze);
     this.botController.start();
-
-    this.humanController = new KeyboardController(this.humanFigure);
-    this.humanController.start();
-
-    gestures.init(this.humanFigure);
 
     return this;
     };

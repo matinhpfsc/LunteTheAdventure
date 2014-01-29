@@ -6,7 +6,12 @@ function Game() {
 
     var isPlaying = true;
 
-    this.level = new Level();
+
+
+    this.humanController = new KeyboardController();
+    // sobald gestures ein Objekt ist, hier die Instanz hinterlegen
+
+    this.level = new Level(this);
 
     this.gameLoop = function (timeStamp) {
         var timeSpan = timeStamp - lastTimeStamp;
