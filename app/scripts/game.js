@@ -3,13 +3,10 @@
 function Game() {
     var _this = this;
     var lastTimeStamp = 0;
-
     var isPlaying = true;
 
-
-
-    this.humanController = new KeyboardController();
-    // sobald gestures ein Objekt ist, hier die Instanz hinterlegen
+    this.humanKeyboardController = new KeyboardController();
+    this.humanGestureController = new GestureController();
 
     this.level = new Level(this);
 

@@ -13,8 +13,8 @@ function Level(thisGame) {
     this.humanFigure.location.y = 50;
     this.allFigures.push(this.humanFigure);
 
-    thisGame.humanController.start(this.humanFigure);
-    gestures.init(this.humanFigure);
+    thisGame.humanKeyboardController.start(this.humanFigure);
+    thisGame.humanGestureController.start(this.humanFigure);
 
 
     // Size from Imagecount
