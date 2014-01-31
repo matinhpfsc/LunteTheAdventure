@@ -3,33 +3,38 @@
 function Level(thisGame) {
 
     var _this = this;
-    var thisGame = thisGame;
+    var _thisGame = thisGame;
 
-    this.viewPort = new ViewPort(windowWidth, windowHeight);
-    this.allFigures = new Array();
+    var size = 2;
+    var width = 16 * size;
+    var height = 12 * size;
+
+    this.allFigures = [];
 
     this.humanFigure = new Figure(activeImage, 1);
     this.humanFigure.location.x = 50;
     this.humanFigure.location.y = 50;
     this.allFigures.push(this.humanFigure);
 
+    this.viewPort = new ViewPort(windowWidth, windowHeight, width * 50, height * 50, this.humanFigure);
+
     thisGame.humanKeyboardController.start(this.humanFigure);
     thisGame.humanGestureController.start(this.humanFigure);
 
 
     // Size from Imagecount
-    this.gameMaze = new Maze(32, 24);
+    this.gameMaze = new Maze(width, height);
     this.gameMazeImage = this.gameMaze.CreateMazeImage(this.gameMaze);
 
-    this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
-
+    //this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
+/*
     this.doCorrectViewPort = function (){
-        this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
-    };
+        this.viewPort.correctViewPort();
+    };*/
 
-    this.enemyFigures = new Array();
+    this.enemyFigures = [];
 
-    var size = 2;
+
     for (var fieldPartX = 0; fieldPartX < size; fieldPartX++) {
         for (var fieldPartY = 0; fieldPartY < size; fieldPartY++) {
             var enemyFigure = new Figure(passiveImage, Math.floor(Math.random() * 2));
@@ -46,4 +51,15 @@ function Level(thisGame) {
     this.botController.start();
 
     return this;
-    };
+    }
+
+Level.prototype.DrawCanvas = function(timeSpan) {
+
+        this.gameMaze.draw( canvasContext, this.viewPort);
+
+        for (var figureIndex = 0; figureIndex < this.allFigures.length; figureIndex++) {
+            this.allFigures[figureIndex].draw(canvasContext, this.viewPort);
+        }
+
+        this.viewPort.draw(canvasContext);
+};
