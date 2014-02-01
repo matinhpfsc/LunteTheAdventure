@@ -21,19 +21,9 @@ function Level(thisGame) {
     thisGame.humanKeyboardController.start(this.humanFigure);
     thisGame.humanGestureController.start(this.humanFigure);
 
-
-    // Size from Imagecount
     this.gameMaze = new Maze(width, height);
-    this.gameMazeImage = this.gameMaze.CreateMazeImage(this.gameMaze);
-
-    //this.viewPort.correctViewPort(this.humanFigure, this.gameMaze);
-/*
-    this.doCorrectViewPort = function (){
-        this.viewPort.correctViewPort();
-    };*/
 
     this.enemyFigures = [];
-
 
     for (var fieldPartX = 0; fieldPartX < size; fieldPartX++) {
         for (var fieldPartY = 0; fieldPartY < size; fieldPartY++) {

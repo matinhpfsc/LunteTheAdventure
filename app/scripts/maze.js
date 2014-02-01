@@ -29,15 +29,6 @@ function Maze(width, height) {
     this.endCellRow = 0;
     var _this = this;
 
-    /*
-    this.getFieldValue = function(cellColumn, cellRow) {
-        if (cellColumn < 0 || cellRow < 0 || cellRow >= height || cellColumn >= width) {
-            return this.EMPTY;
-        }
-        return mazeMatrix[cellRow][cellColumn];
-    };
-*/
-
     this.mazeMatrix = new CreateLabyrint(width, height);
     this.gameMazeImage = this.CreateMazeImage(dungeonImage);
 
@@ -187,9 +178,11 @@ function Maze(width, height) {
         }
         return null;
     }
+    return this;
+}
 
 
-    this.GetSpriteIndex = function (cellColumn, cellRow) {
+Maze.prototype.GetSpriteIndex = function (cellColumn, cellRow) {
         if (_this.getFieldValue(cellColumn, cellRow) == 0) {
             return 8;
         } else {
@@ -205,31 +198,7 @@ function Maze(width, height) {
     };
 
 
-/*
-    this.CreateMazeImage = function() {
-        var mazeCanvas = document.createElement("canvas");
-        mazeCanvas.width = _this.width * 50;
-        mazeCanvas.height = _this.height * 50;
-        //mazeCanvas.width = 50*16;
-        //mazeCanvas.height = 50 * 12;
-        var mazeCanvasContext = mazeCanvas.getContext("2d");
-
-        //for (var cellColumn = 0; cellColumn < game.level.gameMaze.width; cellColumn++) {
-//        for (var cellRow = 0; cellRow < game.level.gameMaze.height; cellRow++) {
-        for (var cellColumn = 0; cellColumn < mazeCanvas.width; cellColumn++) {
-            for (var cellRow = 0; cellRow < mazeCanvas.height; cellRow++) {
-                var spriteIndex = this.GetSpriteIndex(cellColumn, cellRow);
-
-                var spriteY = Math.floor(spriteIndex / 5);
-                var spriteX = spriteIndex % 5;
-                mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
-            }
-        }
-
-        return mazeCanvas;
-    };
-*/
-    this.GetNearestFreeFieldVector = function (startVector) {
+Maze.prototype.GetNearestFreeFieldVector = function (startVector) {
         var xArray = new Array(0, 0, -1, -1, -1, 0, +1, +1, +1);
         var yArray = new Array(0, -1, -1, 0, +1, +1, +1, 0, -1);
 
@@ -243,8 +212,6 @@ function Maze(width, height) {
     };
 
 
-    return this;
-}
 
 Maze.prototype.getFieldValue = function(cellColumn, cellRow) {
     if (cellColumn < 0 || cellRow < 0 || cellRow >= this.height || cellColumn >= this.width) {
@@ -272,36 +239,13 @@ Maze.prototype.GetSpriteIndex = function(cellColumn, cellRow) {
     }
 };
 
-/*
-Maze.prototype.CreateMazeImage = function(dungeonImage) {
-    var mazeCanvas = document.createElement("canvas");
-    mazeCanvas.width = this.width * 50;
-    mazeCanvas.height = this.height * 50;
-    var mazeCanvasContext = mazeCanvas.getContext("2d");
-    for (var cellColumn = 0; cellColumn < this.width; cellColumn++) {
-        for (var cellRow = 0; cellRow < this.height; cellRow++) {
-            var spriteIndex = this.GetSpriteIndex(cellColumn, cellRow);
-
-            var spriteY = Math.floor(spriteIndex / 5);
-            var spriteX = spriteIndex % 5;
-            mazeCanvasContext.drawImage(dungeonImage, 50 * spriteX, 50 * spriteY, 50, 50, cellColumn * 50, cellRow * 50, 50, 50);
-        }
-    }
-
-    return mazeCanvas;
-};
-*/
-
 Maze.prototype.CreateMazeImage = function() {
+    tools.log('createMazeImage');
     var mazeCanvas = document.createElement("canvas");
     mazeCanvas.width = this.width * 50;
     mazeCanvas.height = this.height * 50;
-    //mazeCanvas.width = 50*16;
-    //mazeCanvas.height = 50 * 12;
     var mazeCanvasContext = mazeCanvas.getContext("2d");
 
-    //for (var cellColumn = 0; cellColumn < game.level.gameMaze.width; cellColumn++) {
-//        for (var cellRow = 0; cellRow < game.level.gameMaze.height; cellRow++) {
     for (var cellColumn = 0; cellColumn < mazeCanvas.width; cellColumn++) {
         for (var cellRow = 0; cellRow < mazeCanvas.height; cellRow++) {
             var spriteIndex = this.GetSpriteIndex(cellColumn, cellRow);

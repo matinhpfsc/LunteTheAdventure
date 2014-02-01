@@ -16,11 +16,14 @@ function Figure(image, imageIndex) {
     this.LEFT = new Vector2d(-1, 0);
     this.RIGHT = new Vector2d(+1, 0);
 
-    this.getMazeFieldLocation = function() {
+    return this;
+}
+Figure.prototype.getMazeFieldLocation = function() {
         return new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
     };
 
-    this.move = function(timeSpan) {
+
+Figure.prototype.move = function(timeSpan) {
         var figureCellPosition = this.getMazeFieldLocation();
 
         var cellLocation = figureCellPosition.mul(50);
@@ -58,7 +61,7 @@ function Figure(image, imageIndex) {
         }
     };
 
-    this.isCollided = function(otherFigure) {
+Figure.prototype.isCollided = function(otherFigure) {
         if (this == otherFigure) {
             return false;
         }
@@ -67,34 +70,34 @@ function Figure(image, imageIndex) {
         return figureCellPosition.equals(otherFigureCellPosition);
     };
 
-    this.startWalking = function(orientation) {
+
+Figure.prototype.startWalking = function(orientation) {
         this.orientation = orientation;
         this.speed = this.maximumSpeed;
     };
 
-    this.startWalkingUp = function() {
+Figure.prototype.startWalkingUp = function() {
         this.startWalking(this.UP);
     };
 
-    this.startWalkingDown = function() {
+Figure.prototype.startWalkingDown = function() {
         this.startWalking(this.DOWN);
     };
 
-    this.startWalkingLeft = function() {
+Figure.prototype.startWalkingLeft = function() {
         this.startWalking(this.LEFT);
     };
 
-    this.startWalkingRight = function() {
+Figure.prototype.startWalkingRight = function() {
         this.startWalking(this.RIGHT);
     };
 
-    this.stopWalking = function() {
+Figure.prototype.stopWalking = function() {
         this.speed = 0;
         this.animationStartTimeStamp = 0;
     };
 
-    return this;
-}
+
 
 
 Figure.prototype.draw = function(canvasContext, viewPort) {

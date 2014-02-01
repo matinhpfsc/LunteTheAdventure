@@ -2,9 +2,9 @@
 
 function Game() {
     var _this = this;
-    var lastTimeStamp = 0;
     var isPlaying = true;
 
+    var lastTimeStamp = 0;
     this.humanKeyboardController = new KeyboardController();
     this.humanGestureController = new GestureController();
 
@@ -24,7 +24,6 @@ function Game() {
             }
         }
 
-        //_this.level.doCorrectViewPort();
         _this.level.viewPort.CorrectViewPort();
         _this.level.DrawCanvas(timeSpan);
 
@@ -45,24 +44,28 @@ function Game() {
         }
     };
 
-    this.setPause = function ()
+    return this;
+}
+
+
+
+Game.prototype.setPause = function ()
     {
         isPlaying = false;
     };
 
-    this.setPlay = function ()
+Game.prototype.setPlay = function ()
     {
         isPlaying = true;
         //lastTimeStamp = 0;
         this.gameLoop();
     };
 
-    this.nextLevel = function ()
+Game.prototype.nextLevel = function ()
     {
         _this.level = new Level();
         _this.setPlay();
 
     };
 
-    return this;
-}
+
