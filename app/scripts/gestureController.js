@@ -153,7 +153,7 @@ function GestureController ()
             else
             {
                 // vertikale Bewegung
-                if (deltaY > this.touchSchwellwert)
+                if (deltaY > _this.touchSchwellwert)
                 {
                     _this.controlledFigure.startWalkingDown();
                 }
