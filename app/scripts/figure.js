@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function Figure(image, imageIndex) {
     this.location = new Vector2d(0, 0);
@@ -16,11 +16,14 @@ function Figure(image, imageIndex) {
     this.LEFT = new Vector2d(-1, 0);
     this.RIGHT = new Vector2d(+1, 0);
 
-    this.getMazeFieldLocation = function() {
+    return this;
+}
+Figure.prototype.getMazeFieldLocation = function() {
         return new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
     };
 
-    this.move = function(timeSpan) {
+
+Figure.prototype.move = function(timeSpan) {
         var figureCellPosition = this.getMazeFieldLocation();
 
         var cellLocation = figureCellPosition.mul(50);
@@ -30,7 +33,7 @@ function Figure(image, imageIndex) {
         var currentFigureSpeed = this.speed;
         if (currentFigureSpeed > distanceToCellLocation) {
             //Pruefe, ob naechtse Zelle begehbar ist.
-            if (gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
+            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
                 currentFigureSpeed = distanceToCellLocation;
             } else {
                 var distanceToOtherCellLocation = ((cellLocation.x - this.location.x) * Math.abs(this.orientation.y) + (cellLocation.y - this.location.y) * Math.abs(this.orientation.x));
@@ -52,9 +55,13 @@ function Figure(image, imageIndex) {
                 this.bulletproofCountdown = 0;
             }
         }
+
+        if (this.speed != 0) {
+            this.animationStartTimeStamp += timeSpan;
+        }
     };
 
-    this.isCollided = function(otherFigure) {
+Figure.prototype.isCollided = function(otherFigure) {
         if (this == otherFigure) {
             return false;
         }
@@ -63,28 +70,53 @@ function Figure(image, imageIndex) {
         return figureCellPosition.equals(otherFigureCellPosition);
     };
 
-    this.startWalking = function(orientation) {
+
+Figure.prototype.startWalking = function(orientation) {
         this.orientation = orientation;
         this.speed = this.maximumSpeed;
     };
 
-    this.startWalkingUp = function() {
+Figure.prototype.startWalkingUp = function() {
         this.startWalking(this.UP);
     };
 
-    this.startWalkingDown = function() {
+Figure.prototype.startWalkingDown = function() {
         this.startWalking(this.DOWN);
     };
 
-    this.startWalkingLeft = function() {
+Figure.prototype.startWalkingLeft = function() {
         this.startWalking(this.LEFT);
     };
 
-    this.startWalkingRight = function() {
+Figure.prototype.startWalkingRight = function() {
         this.startWalking(this.RIGHT);
     };
 
-    this.stopWalking = function() {
+Figure.prototype.stopWalking = function() {
         this.speed = 0;
+        this.animationStartTimeStamp = 0;
+    };
+
+
+
+
+Figure.prototype.draw = function(canvasContext, viewPort) {
+    var animationIndex = Math.floor(this.animationStartTimeStamp / 100) % 8;
+    var spriteIndex = 0;
+    if (this.orientation.x > 0) {
+        spriteIndex = 24;
     }
-}
+    if (this.orientation.x < 0) {
+        spriteIndex = 8;
+    }
+    if (this.orientation.y > 0) {
+        spriteIndex = 16;
+    }
+    spriteIndex += this.imageIndex * 4 * 8 + animationIndex;
+    var spriteY = Math.floor(spriteIndex / 8);
+    var spriteX = spriteIndex % 8;
+
+    if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
+        canvasContext.drawImage(this.image, 50 * spriteX, 50 * spriteY, 50, 50, this.location.x - viewPort.x, this.location.y - viewPort.y, 50, 50);
+    }
+};

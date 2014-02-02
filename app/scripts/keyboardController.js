@@ -1,9 +1,10 @@
 'use strict';
 
 function KeyboardController(figure) {
-    this.controlledFigure = figure;
+    this.controlledFigure = null;
     this.onKeyDown = null;
     this.onKeyUp = null;
+    var _this = this;
 
     this.keyCode = {
         left: 37,
@@ -11,41 +12,58 @@ function KeyboardController(figure) {
         right: 39,
         down: 40
     };
-}
 
-KeyboardController.prototype.start = function() {
-    var _this = this;
+    this.start = function (figure)
+    {
+        if (!this.controlledFigure)
+        {
+            this.controlledFigure = figure;
+            this.addHandler();
 
-    this.onKeyDown = function(event) {
-        switch (event.keyCode) {
-            case _this.keyCode.down:
-                event.preventDefault();
-                _this.controlledFigure.startWalkingDown();
-                break;
-            case _this.keyCode.up:
-                event.preventDefault();
-                _this.controlledFigure.startWalkingUp();
-                break;
-            case _this.keyCode.right:
-                event.preventDefault();
-                _this.controlledFigure.startWalkingRight();
-                break;
-            case _this.keyCode.left:
-                event.preventDefault();
-                _this.controlledFigure.startWalkingLeft();
-                break;
         }
     };
 
-    this.onKeyUp = function() {
-        _this.controlledFigure.stopWalking();
+    this.addHandler = function ()
+    {
+        $(document).on('keydown', function(event){
+
+            switch (event.keyCode) {
+                case _this.keyCode.down:
+                    event.preventDefault();
+                    _this.controlledFigure.startWalkingDown();
+                    break;
+                case _this.keyCode.up:
+                    event.preventDefault();
+                    _this.controlledFigure.startWalkingUp();
+                    break;
+                case _this.keyCode.right:
+                    event.preventDefault();
+                    _this.controlledFigure.startWalkingRight();
+                    break;
+                case _this.keyCode.left:
+                    event.preventDefault();
+                    _this.controlledFigure.startWalkingLeft();
+                    break;
+            }
+        });
+
+        $(document).on('keyup', function(event){
+            _this.controlledFigure.stopWalking();
+        });
     };
 
-    window.addEventListener("keydown", this.onKeyDown, false);
-    window.addEventListener("keyup", this.onKeyUp, false);
-};
+    this.removeHandler = function ()
+    {
+        $(document).off('keydown keyup');
 
-KeyboardController.prototype.stop = function() {
-    window.removeEventListener("keydown", this.onKeyDown, false);
-    window.removeEventListener("keyup", this.onKeyUp, false);
-};
+    };
+
+    this.stop = this.removeHandler;
+
+    if (figure)
+    {
+        this.start(figure);
+    }
+
+    return this;
+}
