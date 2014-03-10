@@ -11,7 +11,7 @@ function Level(thisGame) {
 
     this.allFigures = [];
 
-    this.humanFigure = new Figure(activeImage, 1);
+    this.humanFigure = new Figure(activeImage, settings.user.avatar);
     this.humanFigure.location.x = 50;
     this.humanFigure.location.y = 50;
     this.allFigures.push(this.humanFigure);
