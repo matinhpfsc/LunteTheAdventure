@@ -16,6 +16,11 @@ function Figure(image, imageIndex) {
     this.LEFT = new Vector2d(-1, 0);
     this.RIGHT = new Vector2d(+1, 0);
 
+    this.bombsMax = 1;
+    this.bombsCurrent = 1;
+    this.bombLength = 1;
+    this.bombTime = settings.game.bombTime;
+
     return this;
 }
 Figure.prototype.getMazeFieldLocation = function() {
@@ -118,5 +123,14 @@ Figure.prototype.draw = function(canvasContext, viewPort) {
 
     if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
         canvasContext.drawImage(this.image, 50 * spriteX, 50 * spriteY, 50, 50, this.location.x - viewPort.x, this.location.y - viewPort.y, 50, 50);
+    }
+};
+
+
+Figure.prototype.dropBomb = function () {
+    if (this.bombsCurrent > 0 )
+    {
+        game.level.dropItem ({type:'bomb', length:this.bombLength , owner:this, bombTime:this.bombTime});
+        this.bombsCurrent -= 1;
     }
 };

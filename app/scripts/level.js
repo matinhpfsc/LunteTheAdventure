@@ -9,6 +9,7 @@ function Level(thisGame) {
     var width = 16 * size;
     var height = 12 * size;
 
+    this.items = [];
     this.allFigures = [];
 
     this.humanFigure = new Figure(activeImage, settings.user.avatar);
@@ -53,3 +54,10 @@ Level.prototype.DrawCanvas = function(timeSpan) {
 
         this.viewPort.draw(canvasContext);
 };
+
+Level.prototype.dropItem = function (item) {
+
+    var obj = new Item (item);
+    this.items.push(obj);
+    tools.log('dropBomb to level');
+}
