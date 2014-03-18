@@ -39,10 +39,10 @@ function Game() {
             return;
         }
 
-        if (this.isPlaying)
-        {
+      //  if (this.isPlaying)
+      // {
             window.requestAnimFrame(_this.gameLoop);
-        }
+      //   }
     };
 
     return this;
