@@ -1,3 +1,6 @@
+'use strict';
+/* global $ */
+
 var game = null;
 var dungeonImage = null;
 var activeImage = null;
@@ -8,7 +11,7 @@ var canvasContext = null;
 var imageCount = 3;
 
 $(document).ready(function() {
-    var canvas = document.getElementById("lunte-canvas");
+    var canvas = document.getElementById('lunte-canvas');
 
     windowWidth = canvas.width;
     windowHeight = canvas.height;

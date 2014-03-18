@@ -24,8 +24,8 @@ ViewPort.prototype.draw = function(canvasContext) {
 
     if (this.lastFigureEnergy != this.humanFigure.energy) {
         if (this.lastFigureEnergy == null) {
-            this.instrumentLayerImageContext.fillStyle = "#FF0000";
-            this.instrumentLayerImageContext.strokeStyle = "#000000";
+            this.instrumentLayerImageContext.fillStyle = '#FF0000';
+            this.instrumentLayerImageContext.strokeStyle = '#000000';
         }
         this.lastFigureEnergy = this.humanFigure.energy;
         this.instrumentLayerImageContext.clearRect(this.width - 150, 0, 104, 50);

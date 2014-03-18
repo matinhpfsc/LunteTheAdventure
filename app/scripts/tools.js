@@ -1,4 +1,6 @@
 'use strict';
+/* global console */
+
 // abhängig von: jQuery
 //
 //

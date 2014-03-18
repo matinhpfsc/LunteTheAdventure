@@ -1,4 +1,5 @@
 'use strict';
+/* global console, Vector2d, game, settings */
 
 function Figure(image, imageIndex) {
     this.location = new Vector2d(0, 0);
@@ -38,7 +39,7 @@ Figure.prototype.move = function(timeSpan) {
         var currentFigureSpeed = this.speed;
         if (currentFigureSpeed > distanceToCellLocation) {
             //Pruefe, ob naechtse Zelle begehbar ist.
-            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
+            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) === 1) {
                 currentFigureSpeed = distanceToCellLocation;
             } else {
                 var distanceToOtherCellLocation = ((cellLocation.x - this.location.x) * Math.abs(this.orientation.y) + (cellLocation.y - this.location.y) * Math.abs(this.orientation.x));
@@ -61,13 +62,13 @@ Figure.prototype.move = function(timeSpan) {
             }
         }
 
-        if (this.speed != 0) {
+        if (this.speed !== 0) {
             this.animationStartTimeStamp += timeSpan;
         }
     };
 
 Figure.prototype.isCollided = function(otherFigure) {
-        if (this == otherFigure) {
+        if (this === otherFigure) {
             return false;
         }
         var figureCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
@@ -141,8 +142,10 @@ Figure.prototype.pickupItem = function (obj) {
     switch (obj.type)
     {
         case 'bomb':
-            console.log("pickup Bomb");
-            this.bombsCurrent += 1;
+            console.log('"pickup Bomb');
+            if( this.bombsCurrent < this.bombsMax ) {
+                this.bombsCurrent += 1;
+            }
             break;
     }
 
