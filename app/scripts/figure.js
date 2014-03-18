@@ -132,7 +132,7 @@ Figure.prototype.dropBomb = function () {
     if (this.bombsCurrent > 0 )
     {
         console.log("drop Bomb");
-        game.level.dropItem ({type:'bomb', length:this.bombLength , owner:this, bombTime:this.bombTime});
+        game.level.dropItem ({type:'bomb', length:this.bombLength , owner:this, bombTime:this.bombTime, location: this.location});
         this.bombsCurrent -= 1;
 
     }
@@ -142,7 +142,7 @@ Figure.prototype.pickupItem = function (obj) {
     switch (obj.type)
     {
         case 'bomb':
-            console.log('"pickup Bomb');
+            console.log('pickup Bomb');
             if( this.bombsCurrent < this.bombsMax ) {
                 this.bombsCurrent += 1;
             }

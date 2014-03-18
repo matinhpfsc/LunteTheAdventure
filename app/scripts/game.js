@@ -1,4 +1,5 @@
 'use strict';
+/* global */
 
 function Game() {
     var _this = this;
@@ -38,7 +39,7 @@ function Game() {
             return;
         }
 
-        if (isPlaying)
+        if (this.isPlaying)
         {
             window.requestAnimFrame(_this.gameLoop);
         }
@@ -51,12 +52,12 @@ function Game() {
 
 Game.prototype.setPause = function ()
     {
-        isPlaying = false;
+        this.isPlaying = false;
     };
 
 Game.prototype.setPlay = function ()
     {
-        isPlaying = true;
+        this.isPlaying = true;
         //lastTimeStamp = 0;
         this.gameLoop();
     };

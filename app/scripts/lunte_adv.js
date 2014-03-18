@@ -5,10 +5,11 @@ var game = null;
 var dungeonImage = null;
 var activeImage = null;
 var passiveImage = null;
+var bombImage = null;
 var windowWidth = 0;
 var windowHeight = 0;
 var canvasContext = null;
-var imageCount = 3;
+var imageCount = 4;
 
 $(document).ready(function() {
     var canvas = document.getElementById('lunte-canvas');
@@ -41,6 +42,10 @@ function StartImageLoading() {
     passiveImage = new Image();
     passiveImage.onload = OnImageLoaded;
     passiveImage.src = 'images/passive.png';
+
+    bombImage = new Image();
+    bombImage.onload = OnImageLoaded;
+    bombImage.src = 'images/passive.png';
 }
 
 function OnImageLoaded() {

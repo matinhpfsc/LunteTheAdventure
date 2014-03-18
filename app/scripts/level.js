@@ -52,6 +52,10 @@ Level.prototype.DrawCanvas = function(timeSpan) {
             this.allFigures[figureIndex].draw(canvasContext, this.viewPort);
         }
 
+       for (var itemIndex = 0; itemIndex < this.items.length; itemIndex++) {
+            this.items[itemIndex].draw(canvasContext, this.viewPort);
+        }
+
         this.viewPort.draw(canvasContext);
 };
 
