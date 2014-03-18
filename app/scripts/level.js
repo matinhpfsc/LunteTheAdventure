@@ -58,6 +58,14 @@ Level.prototype.DrawCanvas = function(timeSpan) {
 Level.prototype.dropItem = function (item) {
 
     var obj = new Item (item);
+    obj.obj.level = this;
+
     this.items.push(obj);
-    tools.log('dropBomb to level');
+}
+
+Level.prototype.pickupItem = function (item) {
+
+    item.owner.pickupItem(item);
+    this.items.pop(item);
+
 }

@@ -6,6 +6,6 @@ var settings = {
   },
 
   game : {
-      bombTime: 3000
+      bombTime: 1000
   }
 };

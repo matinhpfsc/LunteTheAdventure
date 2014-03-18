@@ -130,7 +130,20 @@ Figure.prototype.draw = function(canvasContext, viewPort) {
 Figure.prototype.dropBomb = function () {
     if (this.bombsCurrent > 0 )
     {
+        console.log("drop Bomb");
         game.level.dropItem ({type:'bomb', length:this.bombLength , owner:this, bombTime:this.bombTime});
         this.bombsCurrent -= 1;
+
     }
+};
+
+Figure.prototype.pickupItem = function (obj) {
+    switch (obj.type)
+    {
+        case 'bomb':
+            console.log("pickup Bomb");
+            this.bombsCurrent += 1;
+            break;
+    }
+
 };
