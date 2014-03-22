@@ -1,16 +1,18 @@
 'use strict';
+/* global console, $, constants, settings, bombImage*/
 
 function Item (obj){
 
   this.obj = obj;
-  this.bulletproofCountdown = 0;
+
   var _that = this;
 
   switch (obj.type) {
         case 'bomb':
             this.image = constants.sprites.bomb.file;
             this.animations = constants.sprites.bomb.animations;
-            setTimeout(function(){_that.goBack() } ,settings.game.bombTime);
+            this.repeat = constants.sprites.bomb.repeat;
+            setTimeout(function(){_that.goBack(); } , settings.game.bombTime);
             break;
     }
 
@@ -26,9 +28,31 @@ Item.prototype.draw = function(canvasContext, viewPort) {
 
 
     var spriteY = 0;
-    var spriteX = Math.floor(this.animationStartTimeStamp / 100) % this.animations;
+    var spriteX = this.getAnimationIndex();
 
-    if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
-        canvasContext.drawImage(bombImage, 50 * spriteX, 50 * spriteY, 50, 50, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, 50, 50);
+    canvasContext.drawImage(bombImage, constants.mazeFieldSize * spriteX, constants.mazeFieldSize * spriteY, constants.mazeFieldSize, constants.mazeFieldSize, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, constants.mazeFieldSize, constants.mazeFieldSize);
+
+};
+
+Item.prototype.getAnimationIndex = function (){
+    if (this.initalTime == null)
+    {
+        this.initalTime = $.now();
     }
+
+    var duration = $.now() - this.initalTime;
+    var animationIndex = Math.floor(duration * constants.fps / 1000);
+
+    if ( animationIndex > this.animations )
+    {
+        if (this.repeat) {
+            animationIndex = animationIndex % this.animations;
+        }
+        else {
+            animationIndex = this.animations;
+        }
+    }
+
+    return animationIndex;
+
 };

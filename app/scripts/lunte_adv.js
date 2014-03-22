@@ -45,7 +45,7 @@ function StartImageLoading() {
 
     bombImage = new Image();
     bombImage.onload = OnImageLoaded;
-    bombImage.src = 'images/passive.png';
+    bombImage.src = 'images/bombe2.png';
 }
 
 function OnImageLoaded() {

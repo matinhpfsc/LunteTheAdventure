@@ -1,4 +1,5 @@
 'use strict';
+/* global $ */
 
 function KeyboardController(figure) {
     this.controlledFigure = null;
