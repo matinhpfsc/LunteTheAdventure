@@ -1,5 +1,5 @@
 'use strict';
-
+/* global Figure, activeImage, passiveImage, settings, Wall2WallBotController, Maze, Item, canvasContext, Vector2d, ViewPort, windowWidth, windowHeight*/
 function Level(thisGame) {
 
     var _this = this;
@@ -65,11 +65,11 @@ Level.prototype.dropItem = function (item) {
     obj.obj.level = this;
 
     this.items.push(obj);
-}
+};
 
 Level.prototype.pickupItem = function (item) {
 
     item.owner.pickupItem(item);
     this.items.pop(item);
 
-}
+};

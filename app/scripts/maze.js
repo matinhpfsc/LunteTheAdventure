@@ -1,4 +1,5 @@
 'use strict';
+/* global dungeonImage */
 
 function Maze(width, height) {
     this.EMPTY = 0;
@@ -47,16 +48,16 @@ function Maze(width, height) {
 
         var side = Math.floor(Math.random() * 4);
 
-        if (side == 0) {
+        if (side === 0) {
             _this.endCellRow = 0;
             _this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
             mazeMatrix[0][_this.endCellColumn] = 0;
         } else {
-            if (side == 1) {
+            if (side === 1) {
                 _this.endCellRow = Math.floor(Math.random() * (height - 2)) + 1;
                 _this.endCellColumn = width - 1;
             } else {
-                if (side == 1) {
+                if (side === 1) {
                     _this.endCellRow = height - 1;
                     _this.endCellColumn = Math.floor(Math.random() * (width - 2)) + 1;
                 } else {
@@ -96,28 +97,28 @@ function Maze(width, height) {
         }
 
 
-        if (noDoorIndex == 0) {
+        if (noDoorIndex === 0) {
             topDoorCap = 0;
         } else {
-            if (noDoorIndex == 1) {
+            if (noDoorIndex === 1) {
                 bottomDoorCap = 0;
             } else {
-                if (noDoorIndex == 2) {
+                if (noDoorIndex === 2) {
                     rightDoorCap = 0;
                 } else {
-                    if (noDoorIndex == 3) {
+                    if (noDoorIndex === 3) {
                         leftDoorCap = 0;
                     }
                 }
             }
         }
 
-        if (wallXPosition != null) {
+        if (wallXPosition !== null) {
             for (var y = chamberY + topDoorCap; y < chamberY + chamberHeight - bottomDoorCap; y++) {
                 mazeMatrix[y][wallXPosition] = 1;
             }
         }
-        if (wallYPosition != null) {
+        if (wallYPosition !== null) {
             for (var x = chamberX + leftDoorCap; x < chamberX + chamberWidth - rightDoorCap; x++) {
                 mazeMatrix[wallYPosition][x] = 1;
             }
@@ -240,11 +241,10 @@ Maze.prototype.GetSpriteIndex = function(cellColumn, cellRow) {
 };
 
 Maze.prototype.CreateMazeImage = function() {
-    tools.log('createMazeImage');
-    var mazeCanvas = document.createElement("canvas");
+    var mazeCanvas = document.createElement('canvas');
     mazeCanvas.width = this.width * 50;
     mazeCanvas.height = this.height * 50;
-    var mazeCanvasContext = mazeCanvas.getContext("2d");
+    var mazeCanvasContext = mazeCanvas.getContext('2d');
 
     for (var cellColumn = 0; cellColumn < mazeCanvas.width; cellColumn++) {
         for (var cellRow = 0; cellRow < mazeCanvas.height; cellRow++) {

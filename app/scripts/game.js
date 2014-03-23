@@ -1,5 +1,5 @@
 'use strict';
-/* global */
+/* global KeyboardController, GestureController, Level, constants*/
 
 function Game() {
     var _this = this;
@@ -8,6 +8,7 @@ function Game() {
     var lastTimeStamp = 0;
     this.humanKeyboardController = new KeyboardController();
     this.humanGestureController = new GestureController();
+
 
     this.level = new Level(_this);
 

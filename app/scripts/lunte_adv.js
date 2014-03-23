@@ -1,5 +1,5 @@
 'use strict';
-/* global $ */
+/* global $, Game */
 
 var game = null;
 var dungeonImage = null;
@@ -50,7 +50,7 @@ function StartImageLoading() {
 
 function OnImageLoaded() {
     imageCount--;
-    if (imageCount == 0) {
+    if (imageCount === 0) {
         game = new Game();
         game.gameLoop(null);
     }

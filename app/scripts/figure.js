@@ -1,5 +1,5 @@
 'use strict';
-/* global console, Vector2d, game, settings */
+/* global console, Vector2d, game, settings, constants */
 
 function Figure(image, imageIndex) {
     this.location = new Vector2d(0, 0);
@@ -25,7 +25,7 @@ function Figure(image, imageIndex) {
     return this;
 }
 Figure.prototype.getMazeFieldLocation = function() {
-        return new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
+        return new Vector2d(Math.floor((this.location.x + 24.5) / constants.maze.fieldSize), Math.floor((this.location.y + 24.5) / constants.maze.fieldSize));
     };
 
 
@@ -123,7 +123,7 @@ Figure.prototype.draw = function(canvasContext, viewPort) {
     var spriteX = spriteIndex % 8;
 
     if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
-        canvasContext.drawImage(this.image, 50 * spriteX, 50 * spriteY, 50, 50, this.location.x - viewPort.x, this.location.y - viewPort.y, 50, 50);
+        canvasContext.drawImage(this.image, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.location.x - viewPort.x, this.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
     }
 };
 

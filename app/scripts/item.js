@@ -30,7 +30,7 @@ Item.prototype.draw = function(canvasContext, viewPort) {
     var spriteY = 0;
     var spriteX = this.getAnimationIndex();
 
-    canvasContext.drawImage(bombImage, constants.mazeFieldSize * spriteX, constants.mazeFieldSize * spriteY, constants.mazeFieldSize, constants.mazeFieldSize, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, constants.mazeFieldSize, constants.mazeFieldSize);
+    canvasContext.drawImage(bombImage, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
 
 };
 
