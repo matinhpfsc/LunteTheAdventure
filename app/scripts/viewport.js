@@ -1,6 +1,6 @@
 'use strict';
 
-function ViewPort(width, height, mazeWidthInPixel, mazeHeightInPixel, humanFigure) {
+function ViewPort(width, height, mazeWidthInPixel, mazeHeightInPixel, humanFigure, canvasContext) {
     this.x = 0;
     this.y = 0;
     this.width = width;
@@ -11,9 +11,10 @@ function ViewPort(width, height, mazeWidthInPixel, mazeHeightInPixel, humanFigur
     this.instrumentLayerImageContext = null;
     this.lastFigureEnergy = null;
     this.humanFigure = humanFigure;
+    this.canvasContext = canvasContext;
 }
 
-ViewPort.prototype.draw = function(canvasContext) {
+ViewPort.prototype.draw = function() {
 
     if (this.instrumentLayerImage == null) {
         this.instrumentLayerImage = document.createElement("canvas");
@@ -33,7 +34,7 @@ ViewPort.prototype.draw = function(canvasContext) {
         this.instrumentLayerImageContext.strokeRect(this.width - 150, 20, 104, 14);
     }
 
-    canvasContext.drawImage(this.instrumentLayerImage, 0, 0);
+    this.canvasContext.drawImage(this.instrumentLayerImage, 0, 0);
 };
 
 ViewPort.prototype.CorrectViewPort = function() {

@@ -1,7 +1,8 @@
 'use strict';
 /* global console, Vector2d, game, settings, constants */
 
-function Figure(image, imageIndex) {
+function Figure(image, imageIndex, canvasContext) {
+    this.canvasContext = canvasContext;
     this.location = new Vector2d(0, 0);
     this.orientation = new Vector2d(0, 1);
     this.animationStartTimeStamp = null;
@@ -106,7 +107,7 @@ Figure.prototype.stopWalking = function() {
 
 
 
-Figure.prototype.draw = function(canvasContext, viewPort) {
+Figure.prototype.draw = function(viewPort) {
     var animationIndex = Math.floor(this.animationStartTimeStamp / 100) % 8;
     var spriteIndex = 0;
     if (this.orientation.x > 0) {
@@ -123,7 +124,7 @@ Figure.prototype.draw = function(canvasContext, viewPort) {
     var spriteX = spriteIndex % 8;
 
     if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
-        canvasContext.drawImage(this.image, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.location.x - viewPort.x, this.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
+        this.canvasContext.drawImage(this.image, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.location.x - viewPort.x, this.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
     }
 };
 

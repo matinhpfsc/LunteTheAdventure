@@ -24,13 +24,13 @@ Item.prototype.goBack = function (){
     this.obj.level.pickupItem(this.obj);
 };
 
-Item.prototype.draw = function(canvasContext, viewPort) {
+Item.prototype.draw = function(viewPort) {
 
 
     var spriteY = 0;
     var spriteX = this.getAnimationIndex();
 
-    canvasContext.drawImage(bombImage, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
+    this.obj.canvasContext.drawImage(bombImage, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.obj.location.x - viewPort.x, this.obj.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
 
 };
 

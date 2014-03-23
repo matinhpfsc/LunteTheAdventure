@@ -1,7 +1,7 @@
 'use strict';
 /* global dungeonImage */
 
-function Maze(width, height) {
+function Maze(width, height, canvasContext) {
     this.EMPTY = 0;
     this.WALL = 1;
 
@@ -26,6 +26,7 @@ function Maze(width, height) {
 
     this.width = width;
     this.height = height;
+    this.canvasContext = canvasContext;
     this.endCellColumn = 0;
     this.endCellRow = 0;
     var _this = this;
@@ -221,8 +222,8 @@ Maze.prototype.getFieldValue = function(cellColumn, cellRow) {
     return this.mazeMatrix[cellRow][cellColumn];
 };
 
-Maze.prototype.draw = function(canvasContext, viewPort) {
-    canvasContext.drawImage(this.gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, viewPort.width, viewPort.height);
+Maze.prototype.draw = function(viewPort) {
+    this.canvasContext.drawImage(this.gameMazeImage, viewPort.x, viewPort.y, viewPort.width, viewPort.height, 0, 0, viewPort.width, viewPort.height);
 };
 
 Maze.prototype.GetSpriteIndex = function(cellColumn, cellRow) {

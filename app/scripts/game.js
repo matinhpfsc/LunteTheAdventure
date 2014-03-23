@@ -1,5 +1,5 @@
 'use strict';
-/* global KeyboardController, GestureController, Level, constants*/
+/* global KeyboardController, GestureController, Level, constants, alert*/
 
 function Game() {
     var _this = this;
@@ -36,7 +36,7 @@ function Game() {
 
         // Ausgang erreicht
         if (Math.floor((_this.level.humanFigure.location.x + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellColumn && Math.floor((_this.level.humanFigure.location.y + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellRow) {
-            _this.nextLevel();
+            this.nextLevel();
             return;
         }
 
