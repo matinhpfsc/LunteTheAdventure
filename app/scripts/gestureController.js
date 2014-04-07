@@ -1,4 +1,5 @@
 'use strict';
+/* global $, console*/
 
 function GestureController ()
 {
@@ -47,7 +48,7 @@ function GestureController ()
             .on('mouseup', _this.mouseEnd )
             .on('touchend touchcancel', _this.touchEnd );
 
-        document.oncontextmenu = function() { tools.log('contextmenu called. dropBomb!'); return false;};
+        document.oncontextmenu = function() { return false;};
 
     };
 
@@ -65,7 +66,7 @@ function GestureController ()
         if (event.button === 2)
         {
             // Call Drop Bomb
-            tools.log('drop Bomb!');
+            _this.controlledFigure.dropBomb();
         }
     };
 
@@ -84,7 +85,7 @@ function GestureController ()
         {
             event.preventDefault();
             // Call Drop Bomb
-            tools.log('"drop Bomb!');
+            _this.controlledFigure.dropBomb();
         }
     };
 

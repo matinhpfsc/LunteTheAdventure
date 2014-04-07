@@ -1,4 +1,5 @@
 'use strict';
+/* global KeyboardController, GestureController, Level, constants, alert*/
 
 function Game() {
     var _this = this;
@@ -7,6 +8,7 @@ function Game() {
     var lastTimeStamp = 0;
     this.humanKeyboardController = new KeyboardController();
     this.humanGestureController = new GestureController();
+
 
     this.level = new Level(_this);
 
@@ -34,14 +36,14 @@ function Game() {
 
         // Ausgang erreicht
         if (Math.floor((_this.level.humanFigure.location.x + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellColumn && Math.floor((_this.level.humanFigure.location.y + (constants.mazeFieldSize / 2)) / constants.mazeFieldSize) == _this.level.gameMaze.endCellRow) {
-            _this.nextLevel();
+            this.nextLevel();
             return;
         }
 
-        if (isPlaying)
-        {
+      //  if (this.isPlaying)
+      // {
             window.requestAnimFrame(_this.gameLoop);
-        }
+      //   }
     };
 
     return this;
@@ -51,12 +53,12 @@ function Game() {
 
 Game.prototype.setPause = function ()
     {
-        isPlaying = false;
+        this.isPlaying = false;
     };
 
 Game.prototype.setPlay = function ()
     {
-        isPlaying = true;
+        this.isPlaying = true;
         //lastTimeStamp = 0;
         this.gameLoop();
     };

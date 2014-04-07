@@ -1,6 +1,8 @@
 'use strict';
+/* global console, Vector2d, game, settings, constants */
 
-function Figure(image, imageIndex) {
+function Figure(image, imageIndex, canvasContext) {
+    this.canvasContext = canvasContext;
     this.location = new Vector2d(0, 0);
     this.orientation = new Vector2d(0, 1);
     this.animationStartTimeStamp = null;
@@ -16,10 +18,15 @@ function Figure(image, imageIndex) {
     this.LEFT = new Vector2d(-1, 0);
     this.RIGHT = new Vector2d(+1, 0);
 
+    this.bombsMax = 1;
+    this.bombsCurrent = 1;
+    this.bombLength = 1;
+    this.bombTime = settings.game.bombTime;
+
     return this;
 }
 Figure.prototype.getMazeFieldLocation = function() {
-        return new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
+        return new Vector2d(Math.floor((this.location.x + 24.5) / constants.maze.fieldSize), Math.floor((this.location.y + 24.5) / constants.maze.fieldSize));
     };
 
 
@@ -33,7 +40,7 @@ Figure.prototype.move = function(timeSpan) {
         var currentFigureSpeed = this.speed;
         if (currentFigureSpeed > distanceToCellLocation) {
             //Pruefe, ob naechtse Zelle begehbar ist.
-            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) == 1) {
+            if (game.level.gameMaze.getFieldValue(figureCellPosition.x + this.orientation.x, figureCellPosition.y + this.orientation.y) === 1) {
                 currentFigureSpeed = distanceToCellLocation;
             } else {
                 var distanceToOtherCellLocation = ((cellLocation.x - this.location.x) * Math.abs(this.orientation.y) + (cellLocation.y - this.location.y) * Math.abs(this.orientation.x));
@@ -56,13 +63,13 @@ Figure.prototype.move = function(timeSpan) {
             }
         }
 
-        if (this.speed != 0) {
+        if (this.speed !== 0) {
             this.animationStartTimeStamp += timeSpan;
         }
     };
 
 Figure.prototype.isCollided = function(otherFigure) {
-        if (this == otherFigure) {
+        if (this === otherFigure) {
             return false;
         }
         var figureCellPosition = new Vector2d(Math.floor((this.location.x + 24.5) / 50), Math.floor((this.location.y + 24.5) / 50));
@@ -100,7 +107,7 @@ Figure.prototype.stopWalking = function() {
 
 
 
-Figure.prototype.draw = function(canvasContext, viewPort) {
+Figure.prototype.draw = function(viewPort) {
     var animationIndex = Math.floor(this.animationStartTimeStamp / 100) % 8;
     var spriteIndex = 0;
     if (this.orientation.x > 0) {
@@ -117,6 +124,30 @@ Figure.prototype.draw = function(canvasContext, viewPort) {
     var spriteX = spriteIndex % 8;
 
     if ((Math.floor(this.bulletproofCountdown / 100)) % 3 < 2) {
-        canvasContext.drawImage(this.image, 50 * spriteX, 50 * spriteY, 50, 50, this.location.x - viewPort.x, this.location.y - viewPort.y, 50, 50);
+        this.canvasContext.drawImage(this.image, constants.maze.fieldSize * spriteX, constants.maze.fieldSize * spriteY, constants.maze.fieldSize, constants.maze.fieldSize, this.location.x - viewPort.x, this.location.y - viewPort.y, constants.maze.fieldSize, constants.maze.fieldSize);
     }
+};
+
+
+Figure.prototype.dropBomb = function () {
+    if (this.bombsCurrent > 0 )
+    {
+        console.log("drop Bomb");
+        game.level.dropItem ({type:'bomb', length:this.bombLength , owner:this, bombTime:this.bombTime, location: this.location});
+        this.bombsCurrent -= 1;
+
+    }
+};
+
+Figure.prototype.pickupItem = function (obj) {
+    switch (obj.type)
+    {
+        case 'bomb':
+            console.log('pickup Bomb');
+            if( this.bombsCurrent < this.bombsMax ) {
+                this.bombsCurrent += 1;
+            }
+            break;
+    }
+
 };

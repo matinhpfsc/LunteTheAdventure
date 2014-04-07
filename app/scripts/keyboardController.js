@@ -1,4 +1,5 @@
 'use strict';
+/* global $ */
 
 function KeyboardController(figure) {
     this.controlledFigure = null;
@@ -10,7 +11,8 @@ function KeyboardController(figure) {
         left: 37,
         up: 38,
         right: 39,
-        down: 40
+        down: 40,
+        dropBomb: 32
     };
 
     this.start = function (figure)
@@ -43,6 +45,10 @@ function KeyboardController(figure) {
                 case _this.keyCode.left:
                     event.preventDefault();
                     _this.controlledFigure.startWalkingLeft();
+                    break;
+                case _this.keyCode.dropBomb:
+                    event.preventDefault();
+                    _this.controlledFigure.dropBomb();
                     break;
             }
         });
